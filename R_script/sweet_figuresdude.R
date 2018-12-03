@@ -1,8 +1,8 @@
-crn_build<-function(site){
-  site<-read.rwl("site.rwl")
-}
+source(crn_build())
 files <- list.files("~desktop/COFECHA/All_testcode/dplR-Chronology-Building")
 crn_build("COR_ABBA.rwl")
+
+
 
 library(dplR)
 COR_ABBA<-read.rwl("COR_ABBA.rwl")
