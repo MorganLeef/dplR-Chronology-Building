@@ -1,13 +1,25 @@
-source(crn_build())
-files <- list.files("~desktop/COFECHA/All_testcode/dplR-Chronology-Building")
+library(dplR)
+
+source("read_function.R")
+filenames <- list.files("data")
 crn_build("COR_ABBA.rwl")
 
 
 
-library(dplR)
+
+
+
+
+
+
+
+
 COR_ABBA<-read.rwl("COR_ABBA.rwl")
 
-COR_ABBA.rwi <- detrend(rwl = COR_ABBA, method = "Mean")
+COR_ABBA.rwi <- detrend(rwl = "COR_ABBA", method = "Mean")
+
+
+
 COR_ABBA.crn<- chron(COR_ABBA.rwi, prefix = "COR")
 plot(COR_ABBA.crn, main="Courtland Road ABBA", add.spline=TRUE, nyrs=20)
 

@@ -1,3 +1,3 @@
 crn_build<-function(site){
-  site<-read.rwl("site.rwl")
+  site<-read.rwl(paste0("data"))
 }
