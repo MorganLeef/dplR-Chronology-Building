@@ -8,14 +8,20 @@ for (filename in filenames){
   ABBA<-read.rwl(paste("data/",filename, "_ABBA.rwl", sep = ""))
   PCRU<-read.rwl(paste("data/",filename, "_PCRU.rwl", sep = ""))
 
- 
-
-  
-  
   z <- detrend(rwl = ABBA, method = "Mean")
   assign(paste(ABBA),z)
-  write.csv(z, paste(filename, ".rwi", sep = ""))
-  
+  write.csv(z, paste(filename, "_ABBA.rwi", sep = ""))
   rm(z)
+  y <- detrend(rwl = PCRU, method = "Mean")
+  assign(paste(PCRU),y)
+  write.csv(y, paste(filename, "_PCRU.rwi", sep = ""))
+  rm(y)
+}
+  
+  r<- chron(r, prefix = "sit")
+  assign(paste(ABBA),z)
+  write.csv(r, paste(filename, ".rwi", sep=""))
+  
+  
 }
   
