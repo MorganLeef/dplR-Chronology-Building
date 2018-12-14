@@ -1,5 +1,5 @@
 # dplR-Chronology-Building and Base R Plotting
-**Proposal**
+##**Proposal**
 The purpose of this project is to use the dplR package to construct mean chronologies, and plot them in Rstudio. Andy Bunn's dplR package contains numerous functions and tools that allow analysts to read in tree-ring data in several formats, and reshape them based on the analysts desires. dplR also has its own plotting functions, that can plot everything from skeleton plots to mean chronologies. In this project, I will use dplR to standardize and detrend my tree-ring data, and create mean chronologies of two different tree species. I will then use dplR and base R plotting to create several different types of figures. I will accomplish all of the following in a single nested loop that runs over two lists of my files.
 
 ##**Objectives**
