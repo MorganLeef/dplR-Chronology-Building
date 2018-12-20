@@ -40,24 +40,28 @@ for (index_abba in 1:length(file_list_abba)){
     axis(2, seq(-0.5, 2.0, by=0.5))
     mtext(side=2, "RWI", line=2)
     abline(h=1.0, col="black")
+    
     plot(years_PCRU, d$xxxstd, type='l', col="red", axes=F, xlab='', main = file_list_pcru[index_pcru], ylab='', ylim = c(0.5,2.0), xlim=c(1980, 2017)) ###PCRU chronology
     axis(1, seq(1980, 2020, by=5))
     mtext(side=1, "Year", line=2)
     axis(2, seq(-0.5, 2.0, by=0.5))
     mtext(side=2, "RWI", line=2)
     abline(h=1.0, col="black")
+    
     plot(sub_year_abba, diff$xxxstd, type='l', axes=F, xlab='', ylab='', main = "ABBA/PCRU Difference", col="blue", ylim = c(-1.0,2.0),xlim=c(1980, 2017)) ###Difference plot
     axis(1, seq(1980, 2020, by=5))
     mtext(side=1, "Year", line=2)
     axis(2, seq(-1.5, 2.0, by=0.5))
     mtext(side=2, "RWI", line=2)
     abline(h=1.0, col="black")
+    
     plot(years_ABBA, b$xxxstd, type='l', axes=F, xlab='', ylab='', main = "ABBA and PCRU", col="blue", ylim = c(0.5,2.0),xlim=c(1980, 2017))  ###Both plotted together
     axis(1, seq(1980, 2020, by=5))
     mtext(side=1, "Year", line=2)
     axis(2, seq(-0.5, 2.0, by=0.5))
     mtext(side=2, "RWI", line=2)
     abline(h=1.0, col="black")
+    
     par(new=TRUE)
     plot(years_PCRU, d$xxxstd, type='l', col="red", axes=F, xlab='', ylab='', ylim = c(0.5,2.0), xlim=c(1980, 2017))
     
