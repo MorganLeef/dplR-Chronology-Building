@@ -3,6 +3,15 @@ library(dplR)
 
 #Read in two files/species for one site (COR), then standardizes, and creates a mean chronology for each
 COR_ABBA<-read.rwl("COR_ABBA.rwl")
+
+sd(COR_ABBA)
+sd(COR_PCRU)
+
+
+
+
+
+
 COR_ABBA.rwi <- detrend(rwl = COR_ABBA, method = "Mean")
 COR_ABBA.crn<- chron(COR_ABBA.rwi, prefix = "COR")
 

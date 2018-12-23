@@ -10,15 +10,15 @@ for (i in 1:length(temp)) assign(temp[i], read.rwl(temp[i]))
 
 BDR01AAB <- BDR_ABBA[, "BDR01AAB"] 
 names(BDR01AAB)<-rownames(BDR_ABBA)
-BDR01AAB.rwi <- detrend.series(y = BDR01AAB, y.name = "BDR01AAB",
-                             + verbose=TRUE)
+BDR01AAB.rwi <- detrend.series(y = BDR01AAB, y.name = "BDR01AAB", verbose=TRUE)
 
+series<-detrend(rwl = BDR_ABBA.rwl, verbose = TRUE, make.plot = TRUE)
 
 
 #BDR_ABBA
 plot(BDR_ABBA.rwl, plot.type = "spag")
 
-i.detrend(BDR_ABBA.rwl)
+i.detrend(BDR_ABBA.rwl, f = 0.1)
 
 
 #BDR_PCRU
@@ -26,7 +26,7 @@ plot(BDR_PCRU.rwl, plot.type = "spag")
 
 i.detrend(BDR_PCRU.rwl)
 
-
+pcru<-detrend(rwl=BDR_PCRU.rwl, verbose = TRUE, make.plot = TRUE)
 #BFT_ABBA
 plot(BFT_ABBA.rwl, plot.type = "spag")
 
