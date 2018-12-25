@@ -46,7 +46,7 @@ plot(C, main="Beaver Dam Road", add.spline=TRUE, nyrs=20)
 plot(sub_year_abba, C$BDRstd, type='o', axes=F, xlab='', ylab='', main= "Beaver Dam Run", col="blue", xlim=c(1980, 2017))
   axis(1, seq(1980, 2020, by=5))
   mtext(side=1, "Year", line=2)
-  axis(2, seq(-0.5, 2.0, by=0.5))
+  axis(2, seq(-0.5, 3.0, by=0.5))
   mtext(side=2, "RWI", line=2)
   abline(h=1.0, col="black")
   
