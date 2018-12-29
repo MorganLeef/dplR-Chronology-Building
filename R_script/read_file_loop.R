@@ -32,7 +32,7 @@ for (index_abba in 1:length(file_list_abba)){
     
     sub_abba<-subset(b, years_ABBA > 1979 & years_ABBA < 2017) ###subsets each chronology to be the same length (1980-2016)
     sub_pcru<-subset(d, years_PCRU > 1979 & years_PCRU < 2017) ###not sure why I did this twice (too afraid to change)
-    
+       
     ###Subtract non-host index from host index
     diff<-(sub_abba - sub_pcru) ###performs basic index subtraction operation to simulate host vs non-host model (extremely simplified)
     

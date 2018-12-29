@@ -30,21 +30,17 @@ sub_abba$samp.depth<-NULL
 sub_pcru$samp.depth<-NULL
 
 #Caluculate standard deviations for the chronologies from each species
-BDR_abba_std<-apply(sub_abba, 2, sd)
-BDR_pcru_std<-apply(sub_pcru, 2, sd)
+BDR_abba.hsd<-apply(sub_abba, 2, sd)
+BDR_pcru.nsd<-apply(sub_pcru, 2, sd)
 
 #Divide the standard deviation of the host series by the non-host
-coefficient<-((BDR_abba_std)/(BDR_pcru_std))
+coefficient<-BDR_abba.hsd/BDR_pcru.nsd
 
 #Caluclate the mean for non-host chronology (Don't think this works)
-mean(sub_pcru$BDPstd)
-
-#Calculate the mean for the non-host detrended INDEX (.rwi) Right???
-sub_pcru_mean<-subset(BDR_PCRU.rwi, years_PCRU > 1979 & years_PCRU < 2017)
-mean<-rowMeans(sub_pcru_mean)
+n.host_mean <- mean(sub_pcru$BDPstd)
 
 #Subtract the mean of the non-host detreneded index from the detrended non-host CHRONOLOGY (.crn)
-quantity<-((sub_pcru)-(mean))
+quantity<-sub_pcru-n.host_mean
 
 #Finally, multiplied the standard deviations ratio by the (detrened .crn - detrended index mean)
 R<-coefficient*quantity
@@ -54,7 +50,9 @@ C<-sub_abba-R
 
 #Neither graph looks correct to me
 plot(BDR_ABBA.crn, add.spline=TRUE, nyrs=20)
-plot(C, main="Beaver Dam Road", add.spline=TRUE, nyrs=20)
+plot(C, main="Beaver Dam Road", add.spline=TRUE, nyrs=20) #this won't plot because
+#dplR is plotting and it's looking for the sample depth, if you want to plot
+#you will need to add sample depth or plot using base R and add and x axis variable (years)
 
 plot(sub_year_abba, C$BDRstd, type='o', axes=F, xlab='', ylab='', main= "Beaver Dam Run", col="blue", xlim=c(1980, 2017))
   axis(1, seq(1980, 2020, by=5))
