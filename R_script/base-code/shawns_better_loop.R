@@ -27,7 +27,7 @@ for (index_abba in 1:length(file_list_abba)){
   # Name the dataframe using substring and characters ".crn"; e.g. BDR.crn
   # for crn.abba[[...]] - [[]] puts it into a list of dataframes; [] just creates a list of lists
   crn.abba[[paste0(substring(file_list_abba[index_abba], 6, 8), ".crn")]] <- 
-    chron(detrend(read.rwl(file_list_abba[index_abba]), method = "Mean"), 
+    chron(detrend(read.rwl(file_list_abba[index_abba]), method = "ModNegExp"), 
           prefix = substring(file_list_abba[index_abba], 6, 8))
   #Added a year column since working with row names later is a pain.
   crn.abba[[paste0(substring(file_list_abba[index_abba], 6, 8), ".crn")]]$Year <- 
@@ -40,7 +40,7 @@ crn.pcru <- list()
     #c<-read.rwl(file_list_pcru[index_pcru])
     #d<-chron(detrend(c, method = "Mean"), m = substring(file_list_pcru[index_pcru], 1,3))
     crn.pcru[[paste0(substring(file_list_pcru[index_pcru], 6, 8), ".crn")]] <-
-    chron(detrend(read.rwl(file_list_pcru[index_pcru]), method = "Mean"), 
+    chron(detrend(read.rwl(file_list_pcru[index_pcru]), method = "ModNegExp"), 
             prefix = substring(file_list_pcru[index_pcru], 6, 8))
     crn.pcru[[paste0(substring(file_list_pcru[index_pcru], 6, 8), ".crn")]]$Year <- 
       row.names(crn.pcru[[paste0(substring(file_list_pcru[index_pcru], 6, 8), ".crn")]])

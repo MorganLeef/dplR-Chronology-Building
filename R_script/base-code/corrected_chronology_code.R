@@ -2,11 +2,15 @@
 
 rm(list=ls())
 library(dplR)
+library(ggplot2)
 
 #Read in all files as an .rwl dataframe
 temp = list.files(pattern="*.rwl")
 for (i in 1:length(temp)) assign(temp[i], read.rwl(temp[i]))
 
+#########
+###BDR###
+#########
 #Detrend and create a chronology for BDR ABBA
 BDR_ABBA.rwi <- detrend(rwl = BDR_ABBA.rwl, method = "ModNegExp") 
 BDR_ABBA.crn<- chron(BDR_ABBA.rwi, prefix = "BDR")
@@ -48,16 +52,101 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
-#Neither graph looks correct to me
-plot(BDR_ABBA.crn, add.spline=TRUE, nyrs=20)
-plot(C, main="Beaver Dam Road", add.spline=TRUE, nyrs=20) #this won't plot because
-#dplR is plotting and it's looking for the sample depth, if you want to plot
-#you will need to add sample depth or plot using base R and add and x axis variable (years)
-
+#Base R plots
 plot(sub_year_abba, C$BDRstd, type='o', axes=F, xlab='', ylab='', main= "Beaver Dam Run", col="blue", xlim=c(1980, 2017))
   axis(1, seq(1980, 2020, by=5))
   mtext(side=1, "Year", line=2)
   axis(2, seq(-0.5, 3.0, by=0.5))
   mtext(side=2, "RWI", line=2)
   abline(h=1.0, col="black")
+
+#ggplot2 plots  
+Year<-sub_year_abba
+RWI<-C$BDRstd
+C_sub<-subset(C$BDRstd, C$BDRstd > 1.0)
+C_sub2<-subset(C$BDRstd, C$BDRstd < 1.0)
+
   
+    
+ggplot(C, aes(Year,RWI))+
+  geom_line(color="blue", size=1.0)+
+  geom_hline(yintercept = 1)+
+  ggtitle("Beaver Dam Run Corrected Chronology")
+
+
+df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
+df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
+df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+
+ggplot( data=df, aes(x=Time, y=RWI))+ 
+  geom_ribbon(aes(ymax=large, ymin=1,  fill = ">Mean"))+
+  geom_ribbon(aes(ymax=1,  ymin=small, fill = "<Mean"))+
+  geom_line()+
+  geom_hline(yintercept = 1)+
+  ggtitle("Beaver Dam Run Corrected Chronology")+
+  scale_fill_manual(name='RWI', values=c("<Mean"=cblue,">Mean"=cred))+
+  theme(legend.position=c(.05,.1))
+  
+
+#########
+###BFT###
+#########
+BFT_ABBA.rwi <- detrend(rwl = BFT_ABBA.rwl, method = "ModNegExp") 
+BFT_ABBA.crn<- chron(BFT_ABBA.rwi, prefix = "BFT")
+
+BFT_PCRU.rwi <- detrend(rwl = BFT_PCRU.rwl, method = "ModNegExp")
+BFT_PCRU.crn<- chron(BFT_PCRU.rwi, prefix = "BFP")
+
+#Create years object
+years_ABBA<-as.numeric(rownames(BFT_ABBA.crn)) 
+years_PCRU<-as.numeric(rownames(BFT_PCRU.crn))
+
+#Subset all data to be between 1980 and 2016
+sub_abba<-subset(BFT_ABBA.crn, years_ABBA > 1979 & years_ABBA < 2017)
+sub_pcru<-subset(BFT_PCRU.crn, years_PCRU > 1979 & years_PCRU < 2017)
+sub_year_abba<-as.numeric(rownames(sub_abba))
+sub_year_pcru<-as.numeric(rownames(sub_pcru))
+
+#Remove samp.depth column
+sub_abba$samp.depth<-NULL
+sub_pcru$samp.depth<-NULL
+
+#Caluculate standard deviations for the chronologies from each species
+BFT_abba.hsd<-apply(sub_abba, 2, sd)
+BFT_pcru.nsd<-apply(sub_pcru, 2, sd)
+
+#Divide the standard deviation of the host series by the non-host
+coefficient<-BFT_abba.hsd/BFT_pcru.nsd
+
+#Caluclate the mean for non-host chronology (Don't think this works)
+n.host_mean <- mean(sub_pcru$BFPstd)
+
+#Subtract the mean of the non-host detreneded index from the detrended non-host CHRONOLOGY (.crn)
+quantity<-sub_pcru-n.host_mean
+
+#Finally, multiplied the standard deviations ratio by the (detrened .crn - detrended index mean)
+R<-coefficient*quantity
+
+#And subtract that value (R) from the detreneded chronology of the host
+C<-sub_abba-R
+
+#Base R plots
+plot(sub_year_abba, C$BFTstd, type='o', axes=F, xlab='', ylab='', main= "Beaver Dam Run", col="blue", xlim=c(1980, 2017))
+axis(1, seq(1980, 2020, by=5))
+mtext(side=1, "Year", line=2)
+axis(2, seq(-0.5, 3.0, by=0.5))
+mtext(side=2, "RWI", line=2)
+abline(h=1.0, col="black")
+
+#ggplot2 plots  
+Year<-sub_year_abba
+RWI<-C$BFTstd
+
+
+ggplot(C, aes(Year,RWI))+
+  geom_line(color="blue", size=1.0)+
+  geom_hline(yintercept = 1)+
+  ggtitle("Balsam Fir Trail Corrected Chronology")
