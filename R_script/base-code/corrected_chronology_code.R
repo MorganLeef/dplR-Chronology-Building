@@ -3,6 +3,8 @@
 rm(list=ls())
 library(dplR)
 library(ggplot2)
+library(magrittr)
+library(ggpubr)
 
 #Read in all files as an .rwl dataframe
 temp = list.files(pattern="*.rwl")
@@ -12,7 +14,7 @@ for (i in 1:length(temp)) assign(temp[i], read.rwl(temp[i]))
 ###BDR###
 #########
 #Detrend and create a chronology for BDR ABBA
-BDR_ABBA.rwi <- detrend(rwl = BDR_ABBA.rwl, method = "ModNegExp") 
+BDR_ABBA.rwi <- detrend(rwl = BDR_ABBA.rwl, method = "ModNegExp")
 BDR_ABBA.crn<- chron(BDR_ABBA.rwi, prefix = "BDR")
 
 #Detrend and create a chonology for BDR PCRU
@@ -60,7 +62,40 @@ plot(sub_year_abba, C$BDRstd, type='o', axes=F, xlab='', ylab='', main= "Beaver 
   mtext(side=2, "RWI", line=2)
   abline(h=1.0, col="black")
 
-#ggplot2 plots  
+#ggplot2 plots 
+
+
+df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$BDRstd, "RWI_PCRU"=sub_pcru$BDPstd) 
+p1<-ggplot(df, aes(Year))+
+  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
+  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
+  geom_hline(yintercept = 1)+
+  ggtitle("Beaver Dam Run")+
+  theme(legend.position=c(.05,.1))
+
+Year<-sub_year_abba
+RWI<-C$BDRstd
+C_sub<-subset(C$BDRstd, C$BDRstd > 1.0)
+C_sub2<-subset(C$BDRstd, C$BDRstd < 1.0)  
+df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
+df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
+df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+
+p2<-ggplot( data=df, aes(x=Year, y=RWI))+ 
+  geom_ribbon(aes(ymax=large, ymin=1,  fill = ">Mean"))+
+  geom_ribbon(aes(ymax=1,  ymin=small, fill = "<Mean"))+
+  geom_line()+
+  geom_hline(yintercept = 1)+
+  ggtitle("Beaver Dam Run Corrected Chronology")+
+  scale_fill_manual(name='RWI', values=c("<Mean"=cblue,">Mean"=cred))+
+  theme(legend.position=c(.05,.1))
+
+ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+
+  
 Year<-sub_year_abba
 RWI<-C$BDRstd
 C_sub<-subset(C$BDRstd, C$BDRstd > 1.0)
@@ -94,6 +129,7 @@ ggplot( data=df, aes(x=Time, y=RWI))+
 #########
 ###BFT###
 #########
+rm(list=ls())
 BFT_ABBA.rwi <- detrend(rwl = BFT_ABBA.rwl, method = "ModNegExp") 
 BFT_ABBA.crn<- chron(BFT_ABBA.rwi, prefix = "BFT")
 
@@ -150,3 +186,48 @@ ggplot(C, aes(Year,RWI))+
   geom_line(color="blue", size=1.0)+
   geom_hline(yintercept = 1)+
   ggtitle("Balsam Fir Trail Corrected Chronology")
+
+df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
+df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
+df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+
+ggplot( data=df, aes(x=Time, y=RWI))+ 
+  geom_ribbon(aes(ymax=large, ymin=1,  fill = ">Mean"))+
+  geom_ribbon(aes(ymax=1,  ymin=small, fill = "<Mean"))+
+  geom_line()+
+  geom_hline(yintercept = 1)+
+  ggtitle("Balsam Fir Trail Corrected Chronology")+
+  scale_fill_manual(name='RWI', values=c("<Mean"=cblue,">Mean"=cred))+
+  theme(legend.position=c(.05,.1))
+
+t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
+
+cols<-c(".99<="="blue", ">=1.0"="red")
+
+
+##Using Factor, legend messed up
+ggplot( data=df, aes(x=Time, y=RWI,colour=factor(RWI)))+ 
+  geom_bar(stat="identity", aes(fill=small))+
+  geom_bar(stat="identity", aes(fill=large))+
+  scale_y_continuous(trans = t_shift)+
+  scale_fill_manual(name="legend", values = cols)+
+  ggtitle("Balsam Fir Trail Corrected Chronology")+
+  theme(legend.position=c(.05,.1))
+
+##Bar with only 2 colors --NO GO
+ggplot( data=df, aes(x=Time, y=RWI,colour=RWI))+ 
+  geom_bar(stat="identity", aes(fill=small))+
+  geom_bar(stat="identity", aes(fill=large))+
+  scale_y_continuous(trans = t_shift)+
+  ggtitle("Balsam Fir Trail Corrected Chronology")+
+  theme(legend.position=c(.05,.1))
+
+#Colored Bar plot that works!
+ggplot( data=df, aes(x=Time, y=RWI))+ 
+  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
+  scale_y_continuous(trans = t_shift)+
+  ggtitle("Balsam Fir Trail Corrected Chronology")+
+  theme(legend.position=c(.05,.1))

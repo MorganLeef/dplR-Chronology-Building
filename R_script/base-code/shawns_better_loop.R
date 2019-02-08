@@ -100,7 +100,7 @@ assign(substring(names(crn.abba[idx]), 1,3),
   scale_x_continuous(breaks=beg)+
   theme(axis.text.x=element_text(size=12))+
   # Give labels everywhere - if you want it blank copy and paste the element_blank() bit at the end.
-  labs(title="This is a graph! Do you like it?", x="Years", y="Index")+#element_blank()
+  labs(title="Beaver Dam Run", x="Years", y="Index")+#element_blank()
   # Uncomment this line if you want to get rid of the y-axis labels.
   #theme(axis.ticks.y=element_blank(), axis.text.y=element_blank())+
   # No legend!
