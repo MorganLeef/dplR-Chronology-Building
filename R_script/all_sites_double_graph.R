@@ -65,8 +65,8 @@ cgreen = rgb(150,250,100, max=255)
 cbrown = rgb(250,175,125, max=255)
 
 p1<-ggplot(df, aes(Time))+
-  geom_line(aes(y = RWI, colour = cgreen),size=1)+
-  geom_line(aes(y = RWI_PCRU, colour = cbrown), size=1)+
+  geom_line(aes(y = RWI, colour = cgreen),size=1.25)+
+  geom_line(aes(y = RWI_PCRU, colour = cbrown), size=1.25)+
   labs(title = "Host and Non-host Indices", x = "Time", y = "RWI", color = "Index\n") +
   scale_color_manual(labels = c("Host", "Non-host"), values = c(cgreen, cbrown))+
   geom_hline(yintercept = 1)+
@@ -75,8 +75,8 @@ p1<-ggplot(df, aes(Time))+
 df_R<-data.frame(Time=sub_year_abba,PCRU_index=R$BDPstd, RWI=sub_abba$BDRstd)
 
 p2<-ggplot(data=df_R, aes(x=Time, y=RWI))+
-  geom_line(aes(y=RWI, colour = cgreen), size=1)+
-  geom_line(aes(y=PCRU_index, colour = cbrown), size=1)+
+  geom_line(aes(y=RWI, colour = cgreen), size=1.25)+
+  geom_line(aes(y=PCRU_index, colour = cbrown), size=1.25)+
   labs(title = "Host and Non-host Indices", x = "Time", y = "RWI", color = "Index\n") +
   scale_color_manual(labels = c("Host", "Non-host"), values = c(cgreen, cbrown))+
   ggtitle("Host and Adjusted Non-host Indices (R)")+
