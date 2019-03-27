@@ -11,11 +11,12 @@ BDR_rot<-read.csv("BDR.csv")
 
 #WIP line plot
 ggplot(BDR_rot, aes(x=Year))+
-  geom_line(aes(y=BDR_rot$Rotholz_n))+
-  geom_line(aes(y=BDR_rot$Rotholz_p),linetype = "dashed")+
+  geom_line(aes(y=BDR_rot$Rotholz_n,linetype = "Rotholz_n"))+
+  geom_line(aes(y=BDR_rot$Rotholz_p,linetype = "Rotholz_p"))+
   scale_y_continuous(sec.axis = sec_axis(~.*1, name = "Percent of Cores"))+
   labs(y = "Number of Cores",x = "Year")+
-  theme(legend.position = c(.05,.2))
+  theme(legend.position = c(.05,.2))+
+  scale_linetype_manual(name="Legend",values=c(Rotholz_n="solid", Rotholz_p="dashed"))
 
 ###Test for first double plot
 #Full plot (one per site)
