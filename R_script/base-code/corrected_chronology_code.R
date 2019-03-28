@@ -106,18 +106,53 @@ df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 
+t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
+
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
 
 ggplot( data=df, aes(x=Time, y=RWI))+ 
   geom_ribbon(aes(ymax=large, ymin=1,  fill = ">Mean"))+
   geom_ribbon(aes(ymax=1,  ymin=small, fill = "<Mean"))+
-  geom_line()+
   geom_hline(yintercept = 1)+
   ggtitle("Beaver Dam Run Corrected Chronology")+
   scale_fill_manual(name='RWI', values=c("<Mean"=cblue,">Mean"=cred))+
   theme(legend.position=c(.05,.1))
+
+###Area plot for C, works but is deformed?
+df2<-data.frame(Time=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Time, df2$RWI, n=1000)
+df2i <- data.frame(Time=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+
+
+ggplot(data=df2i, aes(x=Time, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Beaver Dam Run Corrected Chronology")+
+  theme(legend.position=c(.05,.1))
+
+
+  scale_fill_manual(values=c(cblue, cred), guide=FALSE)
   
+
+###Area plot, works without color
+ggplot(data=df, aes(x=Time))+
+  geom_area(aes(y=small, fill="small"))+
+  geom_area(aes(y=large, fill="large"))+
+  scale_fill_manual(name="",values = c("small"=cblue, "large"=cred))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Beaver Dam Run Corrected Chronology")+
+  theme(legend.position=c(.05,.1))
+  
+
+ggplot(data = df, aes(x=Time, y=RWI))+
+  geom_area()+
+  scale_y_continuous(trans=t_shift)
 
 #########
 ###BFT###
