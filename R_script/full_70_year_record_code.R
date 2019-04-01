@@ -198,8 +198,8 @@ years_ABBA<-as.numeric(rownames(BFT_ABBA.crn))
 years_PCRU<-as.numeric(rownames(BFT_PCRU.crn))
 
 #Subset all data to be between 1980 and 2016
-sub_abba<-subset(BFT_ABBA.crn, years_ABBA > 1949 & years_ABBA < 2017)
-sub_pcru<-subset(BFT_PCRU.crn, years_PCRU > 1949 & years_PCRU < 2017)
+sub_abba<-subset(BFT_ABBA.crn, years_ABBA > 1969 & years_ABBA < 2017)
+sub_pcru<-subset(BFT_PCRU.crn, years_PCRU > 1969 & years_PCRU < 2017)
 sub_year_abba<-as.numeric(rownames(sub_abba))
 sub_year_pcru<-as.numeric(rownames(sub_pcru))
 
@@ -289,8 +289,8 @@ years_ABBA<-as.numeric(rownames(SEW_ABBA.crn))
 years_PCRU<-as.numeric(rownames(SEW_PCRU.crn))
 
 #Subset all data to be between 1980 and 2016
-sub_abba<-subset(SEW_ABBA.crn, years_ABBA > 1949 & years_ABBA < 2017)
-sub_pcru<-subset(SEW_PCRU.crn, years_PCRU > 1949 & years_PCRU < 2017)
+sub_abba<-subset(SEW_ABBA.crn, years_ABBA > 1954 & years_ABBA < 2017)
+sub_pcru<-subset(SEW_PCRU.crn, years_PCRU > 1954 & years_PCRU < 2017)
 sub_year_abba<-as.numeric(rownames(sub_abba))
 sub_year_pcru<-as.numeric(rownames(sub_pcru))
 
