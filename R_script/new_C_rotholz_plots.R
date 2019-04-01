@@ -64,6 +64,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -84,7 +86,7 @@ df<-melt(BDR_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
   
@@ -148,6 +150,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -168,7 +172,7 @@ df<-melt(BFT_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -240,6 +244,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -260,7 +266,7 @@ df<-melt(BRS_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -332,6 +338,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -352,7 +360,7 @@ df<-melt(COR_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -424,6 +432,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -444,7 +454,7 @@ df<-melt(DOL_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -516,6 +526,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -536,7 +548,7 @@ df<-melt(DRT_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -607,6 +619,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -627,7 +641,7 @@ df<-melt(FRE_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -698,6 +712,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -718,7 +734,7 @@ df<-melt(MAL_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -789,6 +805,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -809,7 +827,7 @@ df<-melt(MSH_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -880,6 +898,9 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
+
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -900,7 +921,7 @@ df<-melt(MVT_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -971,6 +992,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -991,7 +1014,7 @@ df<-melt(RMR_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -1062,6 +1085,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -1082,7 +1107,7 @@ df<-melt(SEW_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -1154,6 +1179,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -1174,7 +1201,7 @@ df<-melt(UPT_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -1245,6 +1272,8 @@ df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
 df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
 interp <- approx(df2$Year, df2$RWI, n=1000)
@@ -1265,7 +1294,7 @@ df<-melt(VFD_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 

@@ -70,7 +70,7 @@ p1<-ggplot(df, aes(x=Time, y=RWI))+
   geom_line(aes(y = Host, linetype="Host"),size=.75)+
   geom_line(aes(y = Non_Host, linetype="Non_Host"), size=.75)+
   scale_linetype_manual(name="Index",values=c(Host="solid", Non_Host="dashed"))+
-  ggtitle("Beaver Dam Run")+
+  ggtitle("Beaver Dam Run Host/Non-Host Chronology")+
   theme(legend.position=c(.05,.2))+
   ylim(-1.5,2.5)
 
@@ -97,22 +97,30 @@ df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
 
 
 
-df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
 
-
-  
-
-p3<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent')+
-  scale_y_continuous(trans = t_shift)+
-  theme(legend.position=c(.04,.2))+
-  ggtitle("Corrected Host Chronology (C)")
-  
+#New Area Chart
+p3<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Beaver Dam Run Corrected Chronology")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
+  theme(legend.position=c(.05,.1))
 
 ggarrange(p1, p2, p3, ncol=1, nrow=3, widths=c(1980,2016))
 
+
+###OLD PLOT 
+#p3<-ggplot( data=df, aes(x=Time, y=RWI))+ 
+#  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent')+
+#  scale_y_continuous(trans = t_shift)+
+#  theme(legend.position=c(.04,.2))+
+#  ggtitle("Corrected Host Chronology (C)")
 #########
 ###BFT###
 #########
