@@ -76,7 +76,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Beaver Dam Run Corrected Chronology")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
   
 df<-melt(BDR_rot,id.vars = "Year")
@@ -85,6 +85,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
   
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -159,7 +160,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Balsam Fir Trail Corrected Chronology")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(BFT_rot,id.vars = "Year")
@@ -168,6 +169,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -250,7 +252,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Blister Run Swamp")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(BRS_rot,id.vars = "Year")
@@ -259,6 +261,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -341,7 +344,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Courtland Road")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(COR_rot,id.vars = "Year")
@@ -350,6 +353,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -432,7 +436,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Dolly Sods Wilderness")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred), name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(DOL_rot,id.vars = "Year")
@@ -441,6 +445,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -523,7 +528,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Deer Run Trail")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred), name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(DRT_rot,id.vars = "Year")
@@ -532,6 +537,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -613,7 +619,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Freeland Road")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(FRE_rot,id.vars = "Year")
@@ -622,6 +628,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -703,7 +710,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Mallow Lake")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred), name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(MAL_rot,id.vars = "Year")
@@ -712,6 +719,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -793,7 +801,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Marlington - Scenic Highway")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(MSH_rot,id.vars = "Year")
@@ -802,6 +810,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -883,7 +892,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Middle Valley Trail")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(MVT_rot,id.vars = "Year")
@@ -892,6 +901,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -973,7 +983,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Route 32/Manor Road Int.")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(RMR_rot,id.vars = "Year")
@@ -982,6 +992,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -1063,7 +1074,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("CV Resort Sewer Plant")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(SEW_rot,id.vars = "Year")
@@ -1072,6 +1083,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -1154,7 +1166,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Upper Tract")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(UPT_rot,id.vars = "Year")
@@ -1163,6 +1175,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
@@ -1244,7 +1257,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("CV Volunteer Fire Dept.")+
-  scale_fill_manual(values=c(cblue, cred))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(VFD_rot,id.vars = "Year")
@@ -1253,6 +1266,7 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
   scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
