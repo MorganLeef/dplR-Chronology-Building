@@ -84,7 +84,7 @@ df<-melt(DRT_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -175,7 +175,7 @@ df<-melt(MAL_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -259,7 +259,7 @@ df<-melt(BFT_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -350,7 +350,7 @@ df<-melt(SEW_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
@@ -442,7 +442,7 @@ df<-melt(UPT_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c(cred, cblue), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
