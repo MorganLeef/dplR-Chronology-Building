@@ -448,4 +448,4 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
 
 figure<-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1950,2016))
 
-annotate_figure(figure,top = text_grob("1. Early Infestation", color = "gray25", face = "bold", size = 20))
+annotate_figure(figure,top = text_grob("1. Early Infestation", color = "gray25", face = "bold", size = 24))

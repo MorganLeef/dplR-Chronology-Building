@@ -78,7 +78,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Beaver Dam Run Corrected Chronology")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
   
 df<-melt(BDR_rot,id.vars = "Year")
@@ -86,11 +86,13 @@ df<-melt(BDR_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
   
-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+figure<-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+
+annotate_figure(figure,top = text_grob("3. More Frequent/Intense Infestations", color = "gray25", face = "bold", size = 24))
 
 ###BFT
 rm(list=ls())
@@ -164,7 +166,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Balsam Fir Trail Corrected Chronology")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Below Mean","Above Mean"))+
   theme(legend.position=c(.05,.1))
 
 df<-melt(BFT_rot,id.vars = "Year")
@@ -177,6 +179,8 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+
+
 
 ###BRS
 rm(list=ls())
@@ -446,7 +450,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Dolly Sods Wilderness")+
-  scale_fill_manual(values=c(cblue, cred), name="C RWI", label=c("Above Mean","Below Mean"))+
+  scale_fill_manual(values=c(cblue, cred), name="C RWI", label=c("Above Mean","Below Mean"), guide=FALSE)+
   theme(legend.position=c(.05,.1))
 
 df<-melt(DOL_rot,id.vars = "Year")
@@ -454,11 +458,13 @@ df<-melt(DOL_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide=FALSE)+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+figure<-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+
+annotate_figure(figure,top = text_grob("2. Decline Due to Other Causes?", color = "gray25", face = "bold", size = 24))
 
 ###DRT
 rm(list=ls())
@@ -1099,7 +1105,7 @@ p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("CV Resort Sewer Plant")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide= FALSE)+
   theme(legend.position=c(.05,.1))
 
 df<-melt(SEW_rot,id.vars = "Year")
@@ -1107,11 +1113,13 @@ df<-melt(SEW_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide= FALSE)+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+figure<-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+
+annotate_figure(figure,top = text_grob("3. More Frequent/Intense Infestations", color = "gray25", face = "bold", size = 24))
 
 ###UPT
 rm(list=ls())

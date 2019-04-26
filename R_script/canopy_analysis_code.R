@@ -95,9 +95,9 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+figure<-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-
+annotate_figure(figure,top = text_grob("4. Open Canopy", color = "gray25", face = "bold", size = 24))
 ###Closed canopy UPT
 rm(list=ls())
 library(dplR)
@@ -192,7 +192,9 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+figure<-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+
+annotate_figure(figure,top = text_grob("4. Closed Canopy", color = "gray25", face = "bold", size = 24))
 
 ##################
 ###Long Record###
@@ -292,8 +294,9 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   scale_y_continuous(limits = c(0, 50))+
   ylab("% of Live Samples")
 
-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1950,2016))
+figure<-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1950,2016))
 
+annotate_figure(figure,top = text_grob("4. Open Canopy", color = "gray25", face = "bold", size = 24))
 
 ###Closed canopy UPT
 rm(list=ls())
@@ -391,4 +394,6 @@ p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   scale_x_continuous(limits = c(1950, 2016))+
   ylab("% of Live Samples")
 
-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1950,2016))
+figure<-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1950,2016))
+
+annotate_figure(figure,top = text_grob("4. Closed Canopy", color = "gray25", face = "bold", size = 24))
