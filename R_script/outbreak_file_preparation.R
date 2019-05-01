@@ -17,6 +17,7 @@ library(reshape2)
 library(dfoliatR)
 library(suRge)
 
+
 temp = list.files(pattern="*.rwl")
 for (i in 1:length(temp)) assign(temp[i], read.rwl(temp[i]))
 
@@ -46,5 +47,9 @@ SEW_ABBA_rwi.txt<-write.table(sub_abba, file = "/Users/aleef/Desktop/SEW_ABBA_rw
 SEW_PCRU_crn.txt<-write.table(sub_pcru, file = "/Users/aleef/Desktop/SEW_PCRU_crn.txt", row.names = T, col.names = T)
 
 
+###Defoliate R + suRge Usage (On board dataset)
+data("dmj_h")
+data("dmj_nh")
 
-
+surge<-defoliate_trees(dmj_h,dmj_nh)
+gantt_plot(surge)
