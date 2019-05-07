@@ -22,20 +22,20 @@ temp = list.files(pattern="*.rwl")
 for (i in 1:length(temp)) assign(temp[i], read.rwl(temp[i]))
 
 #Detrend and create a chronology for BDR ABBA
-SEW_ABBA.rwi <- detrend(rwl = SEW_ABBA.rwl, method = "ModNegExp")
-SEW_ABBA.crn<- chron(SEW_ABBA.rwi, prefix = "BDR")
+UPT_ABBA.rwi <- detrend(rwl = UPT_ABBA.rwl, method = "ModNegExp")
+UPT_ABBA.crn<- chron(UPT_ABBA.rwi, prefix = "UPT")
 
 #Detrend and create a chonology for BDR PCRU
-SEW_PCRU.rwi <- detrend(rwl = SEW_PCRU.rwl, method = "ModNegExp")
-SEW_PCRU.crn<- chron(SEW_PCRU.rwi, prefix = "BDP")
+UPT_PCRU.rwi <- detrend(rwl = UPT_PCRU.rwl, method = "ModNegExp")
+UPT_PCRU.crn<- chron(UPT_PCRU.rwi, prefix = "BDP")
 
 #Create years object
-years_ABBA<-as.numeric(rownames(SEW_ABBA.crn)) 
-years_PCRU<-as.numeric(rownames(SEW_PCRU.crn))
+years_ABBA<-as.numeric(rownames(UPT_ABBA.rwi)) 
+years_PCRU<-as.numeric(rownames(UPT_PCRU.crn))
 
 #Subset all data to be between 1980 and 2016
-sub_abba<-subset(SEW_ABBA.rwi, years_ABBA > 1979 & years_ABBA < 2017)
-sub_pcru<-subset(SEW_PCRU.crn, years_PCRU > 1979 & years_PCRU < 2017)
+sub_abba<-subset(UPT_ABBA.crn, years_ABBA > 1943 & years_ABBA < 2017)
+sub_pcru<-subset(UPT_PCRU.crn, years_PCRU > 1943 & years_PCRU < 2017)
 sub_year_abba<-as.numeric(rownames(sub_abba))
 sub_year_pcru<-as.numeric(rownames(sub_pcru))
 
@@ -43,8 +43,8 @@ sub_year_pcru<-as.numeric(rownames(sub_pcru))
 sub_abba$samp.depth<-NULL
 sub_pcru$samp.depth<-NULL
 
-SEW_ABBA_rwi.txt<-write.table(sub_abba, file = "/Users/aleef/Desktop/SEW_ABBA_rwi.txt", row.names = T, col.names = T)
-SEW_PCRU_crn.txt<-write.table(sub_pcru, file = "/Users/aleef/Desktop/SEW_PCRU_crn.txt", row.names = T, col.names = T)
+UPT_ABBA_rwi.txt<-write.table(sub_abba, file = "/Users/aleef/Desktop/UPT_ABBA_rwi.txt", row.names = T, col.names = T)
+UPT_PCRU_crn.txt<-write.table(sub_pcru, file = "/Users/aleef/Desktop/UPT_PCRU_crn.txt", row.names = T, col.names = T)
 
 
 ###Defoliate R + suRge Usage (On board dataset)

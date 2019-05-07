@@ -1,15 +1,10 @@
-#########
-###BDR###
-#########
-
-#Read in .rwl
 rm(list=ls())
 library(dplR)
 library(ggplot2)
 library(magrittr)
 library(ggpubr)
+library(reshape2)
 
-#Read in all files as an .rwl dataframe
 temp = list.files(pattern="*.rwl")
 for (i in 1:length(temp)) assign(temp[i], read.rwl(temp[i]))
 
@@ -54,76 +49,59 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+###Rotholz Dataframe Prep
+BDR_rot<-read.csv("rotholz_data/BDR.csv")
 
-#ggplot2 plots 
-df<-data.frame(Time=sub_year_abba, "RWI"=sub_abba$BDRstd, "RWI_PCRU"=sub_pcru$BDPstd)
+df<-data.frame(Time=sub_year_abba, Host=sub_abba$BDRstd, Non_Host=sub_pcru$BDPstd, RWI=sub_abba$BDRstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
-cgreen = rgb(150,250,100, max=255)
-cbrown = rgb(250,175,125, max=255)
-
-p1<-ggplot(df, aes(Time))+
-  geom_line(aes(y = RWI, colour = cgreen),size=1.25)+
-  geom_line(aes(y = RWI_PCRU, colour = cbrown), size=1.25)+
-  labs(title = "Host and Non-host Indices", x = "Time", y = "RWI", color = "Index\n") +
-  scale_color_manual(labels = c("Host", "Non-host"), values = c(cgreen, cbrown))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Beaver Dam Run")
-
-df_R<-data.frame(Time=sub_year_abba,PCRU_index=R$BDPstd, RWI=sub_abba$BDRstd)
-
-p2<-ggplot(data=df_R, aes(x=Time, y=RWI))+
-  geom_line(aes(y=RWI, colour = cgreen), size=1.25)+
-  geom_line(aes(y=PCRU_index, colour = cbrown), size=1.25)+
-  labs(title = "Host and Non-host Indices", x = "Time", y = "RWI", color = "Index\n") +
-  scale_color_manual(labels = c("Host", "Non-host"), values = c(cgreen, cbrown))+
-  ggtitle("Host and Adjusted Non-host Indices (R)")+
-  geom_hline(yintercept = 1)
-  
-  
-  
 Year<-sub_year_abba
 RWI<-C$BDRstd
 C_sub<-subset(C$BDRstd, C$BDRstd > 1.0)
 C_sub2<-subset(C$BDRstd, C$BDRstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=10000)
 
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Beaver Dam Run Corrected Chronology")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  theme(legend.position=c(.05,.1))
   
+df<-melt(BDR_rot,id.vars = "Year")
 
-p3<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent')+
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Host Chronology (C)")
-  
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
-ggarrange(p1, p2, p3, ncol=1, nrow=3, widths=c(1980,2016))
+ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#########
-###BFT###
-#########
+###Poster Annotation  
+###figure<-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#Read in .rwl
+annotate_figure(figure,top = text_grob("3. More Frequent/Intense Infestations", color = "gray25", face = "bold", size = 24))
+
+###BFT
 rm(list=ls())
-library(dplR)
-library(ggplot2)
-library(magrittr)
-library(ggpubr)
-
-#Read in all files as an .rwl dataframe
 temp = list.files(pattern="*.rwl")
 for (i in 1:length(temp)) assign(temp[i], read.rwl(temp[i]))
-
 #Detrend and create a chronology for BFT ABBA
 BFT_ABBA.rwi <- detrend(rwl = BFT_ABBA.rwl, method = "ModNegExp")
 BFT_ABBA.crn<- chron(BFT_ABBA.rwi, prefix = "BFT")
@@ -165,51 +143,56 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+BFT_rot<-read.csv("BFT.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$BFTstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Balsam Fir Trail")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$BFTstd
 C_sub<-subset(C$BFTstd, C$BFTstd > 1.0)
 C_sub2<-subset(C$BFTstd, C$BFTstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Balsam Fir Trail Corrected Chronology")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Below Mean","Above Mean"))+
   theme(legend.position=c(.05,.1))
+
+df<-melt(BFT_rot,id.vars = "Year")
+
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#########
-###BRS###
-#########
 
-#Read in .rwl
+
+###BRS
 rm(list=ls())
 library(dplR)
 library(ggplot2)
 library(magrittr)
 library(ggpubr)
+library(reshape2)
 
 #Read in all files as an .rwl dataframe
 temp = list.files(pattern="*.rwl")
@@ -256,51 +239,54 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+BRS_rot<-read.csv("BRS.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$BRSstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Blister Run Swamp")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$BRSstd
 C_sub<-subset(C$BRSstd, C$BRSstd > 1.0)
 C_sub2<-subset(C$BRSstd, C$BRSstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Blister Run Swamp")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
+
+df<-melt(BRS_rot,id.vars = "Year")
+
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#########
-###COR###
-#########
-
-#Read in .rwl
+###COR
 rm(list=ls())
 library(dplR)
 library(ggplot2)
 library(magrittr)
 library(ggpubr)
+library(reshape2)
 
 #Read in all files as an .rwl dataframe
 temp = list.files(pattern="*.rwl")
@@ -347,51 +333,54 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+COR_rot<-read.csv("COR.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$CORstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Courtland Road")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$CORstd
 C_sub<-subset(C$CORstd, C$CORstd > 1.0)
 C_sub2<-subset(C$CORstd, C$CORstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Courtland Road")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
+
+df<-melt(COR_rot,id.vars = "Year")
+
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#########
-###DOL###
-#########
-
-#Read in .rwl
+###DOL
 rm(list=ls())
 library(dplR)
 library(ggplot2)
 library(magrittr)
 library(ggpubr)
+library(reshape2)
 
 #Read in all files as an .rwl dataframe
 temp = list.files(pattern="*.rwl")
@@ -438,51 +427,56 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+DOL_rot<-read.csv("DOL.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$DOLstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Dolly Sods Wilderness")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$DOLstd
 C_sub<-subset(C$DOLstd, C$DOLstd > 1.0)
 C_sub2<-subset(C$DOLstd, C$DOLstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Dolly Sods Wilderness")+
+  scale_fill_manual(values=c(cblue, cred), name="C RWI", label=c("Above Mean","Below Mean"), guide=FALSE)+
   theme(legend.position=c(.05,.1))
 
-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+df<-melt(DOL_rot,id.vars = "Year")
 
-#######
-##DRT##
-#######
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide=FALSE)+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
-#Read in .rwl
+figure<-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+
+annotate_figure(figure,top = text_grob("2. Decline Due to Other Causes?", color = "gray25", face = "bold", size = 24))
+
+###DRT
 rm(list=ls())
 library(dplR)
 library(ggplot2)
 library(magrittr)
 library(ggpubr)
+library(reshape2)
 
 #Read in all files as an .rwl dataframe
 temp = list.files(pattern="*.rwl")
@@ -529,46 +523,48 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+DRT_rot<-read.csv("DRT.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$DRTstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Deer Run Trail")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$DRTstd
 C_sub<-subset(C$DRTstd, C$DRTstd > 1.0)
 C_sub2<-subset(C$DRTstd, C$DRTstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Deer Run Trail")+
+  scale_fill_manual(values=c(cblue, cred), name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
+
+df<-melt(DRT_rot,id.vars = "Year")
+
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#######
-##FRE##
-#######
-
-#Read in .rwl
+###FRE
 rm(list=ls())
 library(dplR)
 library(ggplot2)
@@ -620,46 +616,48 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+FRE_rot<-read.csv("FRE.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$FREstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Freeland Road")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$FREstd
 C_sub<-subset(C$FREstd, C$FREstd > 1.0)
 C_sub2<-subset(C$FREstd, C$FREstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Freeland Road")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
+
+df<-melt(FRE_rot,id.vars = "Year")
+
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#######
-##MAL##
-#######
-
-#Read in .rwl
+###MAL
 rm(list=ls())
 library(dplR)
 library(ggplot2)
@@ -711,46 +709,48 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+MAL_rot<-read.csv("MAL.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$MALstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Mallow Lake")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$MALstd
 C_sub<-subset(C$MALstd, C$MALstd > 1.0)
 C_sub2<-subset(C$MALstd, C$MALstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Mallow Lake")+
+  scale_fill_manual(values=c(cblue, cred), name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
+
+df<-melt(MAL_rot,id.vars = "Year")
+
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#######
-##MSH##
-#######
-
-#Read in .rwl
+###MSH
 rm(list=ls())
 library(dplR)
 library(ggplot2)
@@ -802,46 +802,48 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+MSH_rot<-read.csv("MSH.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$MSHstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Marlington - Scenic Highway")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$MSHstd
 C_sub<-subset(C$MSHstd, C$MSHstd > 1.0)
 C_sub2<-subset(C$MSHstd, C$MSHstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Marlington - Scenic Highway")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
+
+df<-melt(MSH_rot,id.vars = "Year")
+
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#######
-##MVT##
-#######
-
-#Read in .rwl
+###MVT
 rm(list=ls())
 library(dplR)
 library(ggplot2)
@@ -893,46 +895,49 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+MVT_rot<-read.csv("MVT.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$MVTstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Middle Valley Trail")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$MVTstd
 C_sub<-subset(C$MVTstd, C$MVTstd > 1.0)
 C_sub2<-subset(C$MVTstd, C$MVTstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Middle Valley Trail")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
+
+df<-melt(MVT_rot,id.vars = "Year")
+
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#######
-##RMR##
-#######
-
-#Read in .rwl
+###RMR
 rm(list=ls())
 library(dplR)
 library(ggplot2)
@@ -984,46 +989,48 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+RMR_rot<-read.csv("RMR.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$RMRstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Route 32/Manor Road Int.")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$RMRstd
 C_sub<-subset(C$RMRstd, C$RMRstd > 1.0)
 C_sub2<-subset(C$RMRstd, C$RMRstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Route 32/Manor Road Int.")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
+
+df<-melt(RMR_rot,id.vars = "Year")
+
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#######
-##SEW##
-#######
-
-#Read in .rwl
+###SEW
 rm(list=ls())
 library(dplR)
 library(ggplot2)
@@ -1075,47 +1082,50 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+SEW_rot<-read.csv("SEW.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$SEWstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Sewer Plant")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$SEWstd
 C_sub<-subset(C$SEWstd, C$SEWstd > 1.0)
 C_sub2<-subset(C$SEWstd, C$SEWstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("CV Resort Sewer Plant (Old calculation)")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide= FALSE)+
   theme(legend.position=c(.05,.1))
 
-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+df<-melt(SEW_rot,id.vars = "Year")
 
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide= FALSE)+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
-#######
-##UPT##
-#######
+figure<-ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#Read in .rwl
+annotate_figure(figure,top = text_grob("3. More Frequent/Intense Infestations", color = "gray25", face = "bold", size = 24))
+
+###UPT
 rm(list=ls())
 library(dplR)
 library(ggplot2)
@@ -1168,45 +1178,48 @@ R<-coefficient*quantity
 C<-sub_abba-R
 
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$UPTstd, "RWI_PCRU"=sub_pcru$BFPstd)
+UPT_rot<-read.csv("UPT.csv")
+
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Upper Tract")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$UPTstd
 C_sub<-subset(C$UPTstd, C$UPTstd > 1.0)
 C_sub2<-subset(C$UPTstd, C$UPTstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("Upper Tract")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
+
+df<-melt(UPT_rot,id.vars = "Year")
+
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
 
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-#######
-##VFD##
-#######
-
-#Read in .rwl
+###VFD
 rm(list=ls())
 library(dplR)
 library(ggplot2)
@@ -1258,37 +1271,44 @@ R<-coefficient*quantity
 #And subtract that value (R) from the detreneded chronology of the host
 C<-sub_abba-R
 
+VFD_rot<-read.csv("VFD.csv")
 
-#ggplot2 plots 
-df<-data.frame(Year=sub_year_abba, "RWI"=sub_abba$VFDstd, "RWI_PCRU"=sub_pcru$BFPstd)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
-
-p1<-ggplot(df, aes(Year))+
-  geom_line(aes(y = RWI, colour = "RWI ABBA"))+
-  geom_line(aes(y = RWI_PCRU, colour = "RWI PCRU"))+
-  geom_hline(yintercept = 1)+
-  ggtitle("Volunteer Fire Department")+
-  theme(legend.position=c(.05,.1))
-
 Year<-sub_year_abba
 RWI<-C$VFDstd
 C_sub<-subset(C$VFDstd, C$VFDstd > 1.0)
 C_sub2<-subset(C$VFDstd, C$VFDstd < 1.0)  
-df_small<-data.frame(Year=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
-df_large<-data.frame(Year=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
-df<-data.frame(Year=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
-
-cblue = rgb(125,200,200, max=255)
-cred  = rgb(200,125,125, max=255)
 
 df_small<-data.frame(Time=Year, RWI=ifelse(c(RWI)>1,NA,RWI))
 df_large<-data.frame(Time=Year, RWI=ifelse(c(RWI)<1,NA,RWI))
 df<-data.frame(Time=Year, RWI=RWI, small=df_small$RWI, large=df_large$RWI)
+cblue = rgb(125,200,200, max=255)
+cred  = rgb(200,125,125, max=255)
+corange = rgb(250,125,100, max=255) 
+cblue2 = rgb(100,150,225, max=255)
 
-p2<-ggplot( data=df, aes(x=Time, y=RWI))+ 
-  geom_bar(stat = 'identity', aes(fill = RWI<1), position = 'dodge', col = 'transparent') +
-  scale_y_continuous(trans = t_shift)+
-  ggtitle("Corrected Chronology")+
+df2<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI)  
+interp <- approx(df2$Year, df2$RWI, n=1000)
+df2i <- data.frame(Year=interp$x, RWI=interp$y)
+df2i$Mean[df2i$RWI < 1] <- "<Mean"
+df2i$Mean[df2i$RWI > 1] <- ">Mean"
+
+p1<-ggplot(data=df2i, aes(x=Year, y=RWI))+
+  geom_area(aes(fill = Mean))+
+  geom_hline(yintercept = 1)+
+  scale_y_continuous(trans=t_shift)+
+  ggtitle("CV Volunteer Fire Dept.")+
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"))+
   theme(legend.position=c(.05,.1))
 
+df<-melt(VFD_rot,id.vars = "Year")
+
+p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
+  geom_bar(stat='identity')+
+  theme(legend.position=c(.05,.1))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_y_continuous(limits = c(0, 50))+
+  ylab("% of Live Samples")
+
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
+
