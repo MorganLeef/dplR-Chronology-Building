@@ -8,8 +8,8 @@ library(ggpubr)
 library(reshape2)
 
 ###Number of samples with rotholz
-rot<-read.csv("rotholz_years.csv")
-sampdepth<-read.csv("sample_depth.csv")
+rot<-read.csv("rotholz_data/rotholz_years.csv")
+sampdepth<-read.csv("rotholz_data/sample_depth.csv")
 df<-melt(rot,id.vars = "Year")
 
 
