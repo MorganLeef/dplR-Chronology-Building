@@ -73,7 +73,7 @@ p1<-ggplot(df, aes(x=Time, y=RWI))+
   geom_line(aes(y = Non_Host, linetype="Non_Host"), size=.75)+
   scale_linetype_manual(name="Index",values=c(Host="solid", Non_Host="dashed"))+
   ggtitle("Beaver Dam Run Host/Non-Host Chronology")+
-  theme(legend.position=c(.05,.2))+
+  theme(legend.position=c(.95,-.1))+
   ylim(-1.5,2.5)
 
 #Caluculate standard deviations for the chronologies from each species
@@ -101,7 +101,7 @@ p2<-ggplot(data=df_R, aes(x=Time, y=RWI))+
   geom_line(aes(y=Non_Host, linetype="Non_Host"), size=.75)+
   scale_linetype_manual(name="Index",values=c(Host="solid", Non_Host="dashed"))+
   ggtitle("Host and Adjusted Non-host Indices (R)")+
-  theme(legend.position=c(.05,.2))+
+  theme(legend.position=c(.95,-.1))+
   ylim(-1.5,2.5)
 
 df<-data.frame(Year=Year, Mean=ifelse(c(RWI)>1,"<Mean",">Mean"), RWI=RWI) 
@@ -116,7 +116,7 @@ p3<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Beaver Dam Run - Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
-  theme(legend.position=c(.05,.1))
+  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Below Mean","Above Mean"))+
+  theme(legend.position=c(.95,-.05))
 
 ggarrange(p1, p2, p3, ncol=1, nrow=3, widths=c(1980,2016))
