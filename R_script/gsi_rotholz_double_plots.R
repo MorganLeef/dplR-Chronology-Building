@@ -81,7 +81,7 @@ df<-melt(BDR_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -168,7 +168,7 @@ df<-melt(BFT_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -255,7 +255,7 @@ df<-melt(BRS_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -342,7 +342,7 @@ df<-melt(COR_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -429,7 +429,7 @@ df<-melt(DOL_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -516,7 +516,7 @@ df<-melt(DRT_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -603,7 +603,7 @@ df<-melt(FRE_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -690,7 +690,7 @@ df<-melt(MAL_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -777,7 +777,7 @@ df<-melt(MSH_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -864,7 +864,7 @@ df<-melt(MVT_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -951,7 +951,7 @@ df<-melt(RMR_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -1038,7 +1038,7 @@ df<-melt(SEW_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -1127,7 +1127,7 @@ df<-melt(UPT_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -1214,7 +1214,7 @@ df<-melt(VFD_rot,id.vars = "Year")
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
   geom_bar(stat='identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"))+
+  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
