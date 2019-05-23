@@ -36,13 +36,14 @@ sub_year_pcru<-as.numeric(rownames(sub_pcru))
 sub_abba$samp.depth<-NULL
 sub_pcru$samp.depth<-NULL
 
-###
+###New method of calculating corrected chronologies using dfoliatR/suRge
+##Function subtracts values from non-host .crn from values in host index
 ef_defol <- defoliate_trees(host_tree = sub_abba, nonhost_chron = sub_pcru, duration_years = 8, list_output = FALSE)
 
-###
+###Standard plotting of defoliate trees function (high gsi in red)
 ###plot_defol(ef_defol, col_defol = "red")
 
-###
+###Plots varying intensity infestation events for each series over time
 ###gantt_plot(ef_defol)
 
 ###
@@ -995,6 +996,8 @@ sub_pcru$samp.depth<-NULL
 
 ###
 ef_defol <- defoliate_trees(host_tree = sub_abba, nonhost_chron = sub_pcru, duration_years = 8, list_output = FALSE)
+
+
 
 ###
 ###plot_defol(ef_defol, col_defol = "red")
