@@ -10,25 +10,44 @@ library(tidyverse)
 #sub_defol<-subset(ef_defol, ef_defol$year > 2015 & ef_defol$year < 2017)
 
 ###FRE
-fre_rec<-read.csv("forest_service_data/FRE_rot_freq_by_pop_2014.csv")
-fre_rec<-read.csv("forest_service_data/FRE_rot_freq_by_pop_all_time.csv")
+fre_rec_rot<-read.csv("forest_service_data/FRE_rot_freq_by_pop_full_record_rot.csv")
+fre_rec_num<-read.csv("forest_service_data/FRE_rot_freq_by_pop_full_record_num.csv")
+fre_rec<-read.csv("forest_service_data/FRE_rot_freq_pop_full_record_melt.csv")
+fre_test<-read.csv("forest_service_data/FRE_test.csv")
+#fre_rec2<-read.csv("forest_service_data/FRE_rot_freq_by_pop_2015.csv")
+#fre_rec3<-read.csv("forest_service_data/FRE_rot_freq_by_pop_2016.csv")
+#fre_rec<-read.csv("forest_service_data/FRE_rot_freq_by_pop_all_time.csv")
 #Old plot
 #ggplot(fre_rec, aes(x = bwa_pop, y = rot_tree, fill = bwa_pop ))+
 #  geom_bar(colour="black", stat="identity")+
 #  geom_bar(aes(p1))+
 #  ylim(0,70)
 
-df<-melt(fre_rec,id.vars = "bwa_pop")
-df$bwa_pop <- factor(df$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
+fre_test$bwa_pop <- factor(fre_test$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
+
+
+
+ggplot(fre_test, aes(fill=variable,x = bwa_pop, y = value))+
+  geom_bar(position = "dodge", stat = "identity")+
+  ylim(c(0,100))+
+  ggtitle("FRE 2014 BWA Pop/% Rotholz")
   
-ggplot(df, aes(x = bwa_pop, y = value,fill=variable))+
-  geom_bar(stat='identity')+
-  scale_fill_manual(values=c("brown2", "steelblue4"),name="",label=c("% Rotholz", "# of Trees"))+
-  scale_y_continuous(limits = c(0, 100),sec.axis = sec_axis(~.*1, name = "Sample Depth"))+
-  ylab("% Rotholz")+
-  xlab("BWA Population Size")+
-  theme(legend.position=c(.85,.83))+
-  ggtitle("Freeland Road BWA Population- % Rotholz (2014-16)")
+
+
+#df2<-melt(fre_rec2,id.vars = "bwa_pop")
+#df$bwa_pop <- factor(df$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
+#df3<-melt(fre_rec3,id.vars = "bwa_pop")
+#df$bwa_pop <- factor(df$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
+
+#Old stacked plot
+#ggplot(df, aes(x = bwa_pop, y = value,fill=variable))+
+  #geom_bar(stat='identity')+
+  #scale_fill_manual(values=c("brown2", "steelblue4"),name="",label=c("% Rotholz", "# of Trees"))+
+  #scale_y_continuous(limits = c(0, 100),sec.axis = sec_axis(~.*1, name = "Sample Depth"))+
+  #ylab("% Rotholz")+
+  #xlab("BWA Population Size")+
+  #theme(legend.position=c(.85,.83))+
+  #ggtitle("Freeland Road BWA Population- % Rotholz (2014-16)")
 
 fre_gsi<-read.csv("forest_service_data/FRE_inf_data.csv")
 
@@ -134,3 +153,9 @@ fre_gsi<-read.csv("forest_service_data/FRE_inf_data.csv")
 
 #ggplot(fre_gsi, aes(x=tree_id, y=tree_gsi))+
   #geom_line()
+
+specie=c(rep("sorgho" , 3) , rep("poacee" , 3) , rep("banana" , 3) , rep("triticum" , 3) )
+condition=rep(c("normal" , "stress" , "Nitrogen") , 4)
+value=abs(rnorm(12 , 0 , 15))
+data=data.frame(specie,condition,value)
+
