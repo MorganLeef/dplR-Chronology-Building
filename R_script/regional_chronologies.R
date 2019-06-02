@@ -25,7 +25,7 @@ years_ABBA<-as.numeric(rownames(cv_abba.crn))
 
 sub_cv_abba<-subset(cv_abba.crn, years_ABBA > 1931 & years_ABBA < 2018)
 
-cv_abba_crn.txt<-write.table(sub_cv_abba, file = "/Users/aleef/Desktop/cv_abba_crn.txt", row.names = T, col.names = T)
+#cv_abba_crn.txt<-write.table(sub_cv_abba, file = "/Users/aleef/Desktop/cv_abba_crn.txt", row.names = T, col.names = T)
 
 ###crn.plot(sub_cv_abba)
 
@@ -40,7 +40,7 @@ years_ABBA<-as.numeric(rownames(cv_pcru.crn))
 
 sub_cv_pcru<-subset(cv_pcru.crn, years_ABBA > 1748 & years_ABBA < 2018)
 
-cv_pcru_crn.txt<-write.table(sub_cv_pcru, file = "/Users/aleef/Desktop/cv_pcru_crn.txt", row.names = T, col.names = T)
+#cv_pcru_crn.txt<-write.table(sub_cv_pcru, file = "/Users/aleef/Desktop/cv_pcru_crn.txt", row.names = T, col.names = T)
 
 
 ###crn.plot(sub_cv_pcru)
@@ -56,7 +56,7 @@ DOL_ABBA.crn<- chron(DOL_ABBA.rwi, prefix = "DOL")
 years_ABBA<-as.numeric(rownames(DOL_ABBA.crn))
 sub_dol_abba<-subset(DOL_ABBA.crn, years_ABBA > 1964 & years_ABBA < 2017)
 
-dol_abba_crn.txt<-write.table(sub_dol_abba, file = "/Users/aleef/Desktop/dol_abba_crn.txt", row.names = T, col.names = T)
+#dol_abba_crn.txt<-write.table(sub_dol_abba, file = "/Users/aleef/Desktop/dol_abba_crn.txt", row.names = T, col.names = T)
 
 
 ###crn.plot(sub_dol_abba)
@@ -69,7 +69,7 @@ DOL_PCRU.crn<- chron(DOL_PCRU.rwi, prefix = "DOL")
 years_PCRU<-as.numeric(rownames(DOL_PCRU.crn))
 sub_dol_pcru<-subset(DOL_PCRU.crn, years_PCRU > 1921 & years_PCRU < 2018)
 
-dol_pcru_crn.txt<-write.table(sub_dol_pcru, file = "/Users/aleef/Desktop/dol_pcru_crn.txt", row.names = T, col.names = T)
+#dol_pcru_crn.txt<-write.table(sub_dol_pcru, file = "/Users/aleef/Desktop/dol_pcru_crn.txt", row.names = T, col.names = T)
 
 
 ###crn.plot(sub_dol_pcru)
@@ -128,7 +128,7 @@ MSH_ABBA.crn<- chron(MSH_ABBA.rwi, prefix = "MSH")
 years_ABBA<-as.numeric(rownames(MSH_ABBA.crn))
 sub_msh_abba<-subset(MSH_ABBA.crn, years_ABBA > 1971 & years_ABBA < 2018)
 
-msh_abba_crn.txt<-write.table(sub_msh_abba, file = "/Users/aleef/Desktop/msh_abba_crn.txt", row.names = T, col.names = T)
+#msh_abba_crn.txt<-write.table(sub_msh_abba, file = "/Users/aleef/Desktop/msh_abba_crn.txt", row.names = T, col.names = T)
 
 
 #crn.plot(sub_msh_abba)
@@ -141,7 +141,7 @@ MSH_PCRU.crn<- chron(MSH_PCRU.rwi, prefix = "MSH")
 years_PCRU<-as.numeric(rownames(MSH_PCRU.crn))
 sub_msh_pcru<-subset(MSH_PCRU.crn, years_PCRU > 1974 & years_PCRU < 2018)
 
-msh_pcru_crn.txt<-write.table(sub_msh_pcru, file = "/Users/aleef/Desktop/msh_pcru_crn.txt", row.names = T, col.names = T)
+#msh_pcru_crn.txt<-write.table(sub_msh_pcru, file = "/Users/aleef/Desktop/msh_pcru_crn.txt", row.names = T, col.names = T)
 
 
 #crn.plot(sub_msh_pcru)
@@ -157,7 +157,7 @@ years_ABBA<-as.numeric(rownames(randolph_abba.crn))
 
 sub_ran_abba<-subset(randolph_abba.crn, years_ABBA > 1941 & years_ABBA < 2018)
 
-rand_abba_crn.txt<-write.table(sub_ran_abba, file = "/Users/aleef/Desktop/rand_abba_crn.txt", row.names = T, col.names = T)
+#rand_abba_crn.txt<-write.table(sub_ran_abba, file = "/Users/aleef/Desktop/rand_abba_crn.txt", row.names = T, col.names = T)
 
 
 #crn.plot(sub_ran_abba)
@@ -172,7 +172,7 @@ years_PCRU<-as.numeric(rownames(randolph_pcru.crn))
 
 sub_ran_pcru<-subset(randolph_pcru.crn, years_ABBA > 1910 & years_ABBA < 2017)
 
-rand_pcru_crn.txt<-write.table(sub_ran_pcru, file = "/Users/aleef/Desktop/rand_pcru_crn.txt", row.names = T, col.names = T)
+#rand_pcru_crn.txt<-write.table(sub_ran_pcru, file = "/Users/aleef/Desktop/rand_pcru_crn.txt", row.names = T, col.names = T)
 
 
 #crn.plot(sub_ran_pcru)
