@@ -1,0 +1,13 @@
+bwa_pop,Year,rot_tree,num_tree
+None,2014,0,2
+Light,2014,20,10
+Moderate,2014,100,2
+Heavy,2014,0,0
+None,2015,0,3
+Light,2015,20,10
+Moderate,2015,100,1
+Heavy,2015,0,0
+None,2016,29,7
+Light,2016,43,7
+Moderate,2016,0,0
+Heavy,2016,0,0

@@ -7,155 +7,101 @@ library(ggpubr)
 library(reshape2)
 library(tidyverse)
 
+
 #sub_defol<-subset(ef_defol, ef_defol$year > 2015 & ef_defol$year < 2017)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
+
+######################
+###BWA pop - % Rotholz
+######################
 
 ###FRE
-fre_rec_rot<-read.csv("forest_service_data/FRE_rot_freq_by_pop_full_record_rot.csv")
-fre_rec_num<-read.csv("forest_service_data/FRE_rot_freq_by_pop_full_record_num.csv")
-fre_rec<-read.csv("forest_service_data/FRE_rot_freq_pop_full_record_melt.csv")
-fre_test<-read.csv("forest_service_data/FRE_test.csv")
-#fre_rec2<-read.csv("forest_service_data/FRE_rot_freq_by_pop_2015.csv")
-#fre_rec3<-read.csv("forest_service_data/FRE_rot_freq_by_pop_2016.csv")
-#fre_rec<-read.csv("forest_service_data/FRE_rot_freq_by_pop_all_time.csv")
-#Old plot
-#ggplot(fre_rec, aes(x = bwa_pop, y = rot_tree, fill = bwa_pop ))+
-#  geom_bar(colour="black", stat="identity")+
-#  geom_bar(aes(p1))+
-#  ylim(0,70)
 
-fre_test$bwa_pop <- factor(fre_test$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
+fre_rec_rot<-read.csv("data/forest_service_data/FRE_rot_freq_by_pop_full_record.csv")
+fre_rec_rot$bwa_pop <- factor(fre_rec_rot$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
+
+#Base R plots
+colours <- c("cyan", "blue", "orange", "red")
+
+plot.new()
+bp<-barplot(fre_rec_rot$rot_tree, main = "Freeland Road BWA Population - % Rotholz", 
+        beside = TRUE, width = 1, col = colours, ylab = "% Rotholz", xlab = "BWA Pop", ylim = c(0,200),
+        names.arg = c("","2014","","","","2015","","","","2016","",""))
+
+legend("topright",c("None","Light","Moderate","Heavy"), cex=0.5, fill=colours)
+text(bp, 0, round(fre_rec_rot$num_tree, 1),cex=0.75, pos = 3)
+        
+par(new = TRUE)
+plot(fre_rec_rot$Year[fre_rec_rot$bwa_pop=="None"],fre_rec_rot$mean_gsi[fre_rec_rot$bwa_pop=="None"], 
+     type = "l", ylab = "", xlab = "", ylim = c(-2,2),
+     xaxt = "n", yaxt = "n", col=colours, bty="n")     
+lines(fre_rec_rot$Year[fre_rec_rot$bwa_pop=="Light"],fre_rec_rot$mean_gsi[fre_rec_rot$bwa_pop=="Light"], type = "l", col="blue")
+axis(side = 4)
+mtext(side = 4, line = 3, 'Mean GSI')
 
 
 
-ggplot(fre_test, aes(fill=variable,x = bwa_pop, y = value))+
-  geom_bar(position = "dodge", stat = "identity")+
+#ggplot
+ggplot(fre_rec_rot, aes(x = Year, y=mean_gsi, colour = bwa_pop))+
+  geom_line()+
+  ylim(-1,2)
+
+ggplot(fre_rec_rot, aes(x=Year, y=rot_tree, fill=bwa_pop, label = num_tree))+
+  geom_bar(stat = 'identity', position = 'dodge')+
+  scale_fill_manual(values=c(bblue, bblue2, borange, bred),name="BWA Population", label=c("None","Light", "Moderate", "Heavy"))+
   ylim(c(0,100))+
-  ggtitle("FRE 2014 BWA Pop/% Rotholz")
-  
+  ylab("% Rotholz")+
+  ggtitle("Freeland Road BWA Population-Rotholz Summary")+
+  geom_label(mapping=NULL,data=NULL,stat="identity",position_dodge(width = 1), size = 3)
 
-
-#df2<-melt(fre_rec2,id.vars = "bwa_pop")
-#df$bwa_pop <- factor(df$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
-#df3<-melt(fre_rec3,id.vars = "bwa_pop")
-#df$bwa_pop <- factor(df$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
-
-#Old stacked plot
-#ggplot(df, aes(x = bwa_pop, y = value,fill=variable))+
-  #geom_bar(stat='identity')+
-  #scale_fill_manual(values=c("brown2", "steelblue4"),name="",label=c("% Rotholz", "# of Trees"))+
-  #scale_y_continuous(limits = c(0, 100),sec.axis = sec_axis(~.*1, name = "Sample Depth"))+
-  #ylab("% Rotholz")+
-  #xlab("BWA Population Size")+
-  #theme(legend.position=c(.85,.83))+
-  #ggtitle("Freeland Road BWA Population- % Rotholz (2014-16)")
-
-fre_gsi<-read.csv("forest_service_data/FRE_inf_data.csv")
-
-#ggplot(fre_gsi, aes(x=tree_id, y=tree_gsi))+
-  #geom_line()
-
+#geom_line(data = fre_rec_rot, aes(x = Year, y = mean_gsi))+
 ###MAL
-MAL_rec<-read.csv("forest_service_data/MAL_rot_freq_by_pop_all_time.csv")
-#Old plot
-#ggplot(fre_rec, aes(x = bwa_pop, y = rot_tree, fill = bwa_pop ))+
-#  geom_bar(colour="black", stat="identity")+
-#  geom_bar(aes(p1))+
-#  ylim(0,70)
+mal_rec_rot<-read.csv("data/forest_service_data/MAL_rot_freq_by_pop_full_record.csv")
+mal_rec_rot$bwa_pop <- factor(mal_rec_rot$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
 
-df<-melt(MAL_rec,id.vars = "bwa_pop")
-df$bwa_pop <- factor(df$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
-
-ggplot(df, aes(x = bwa_pop, y = value,fill=variable))+
-  geom_bar(stat='identity')+
-  scale_fill_manual(values=c("brown2", "steelblue4"),name="",label=c("% Rotholz", "# of Trees"))+
-  scale_y_continuous(limits = c(0, 100),sec.axis = sec_axis(~.*1, name = "Sample Depth"))+
+ggplot(mal_rec_rot, aes(x=Year, y=rot_tree, fill=bwa_pop, label = num_tree))+
+  geom_bar(stat = 'identity', position = 'dodge')+
+  scale_fill_manual(values=c(bblue, bblue2, borange, bred),name="BWA Population", label=c("None","Light", "Moderate", "Heavy"))+
+  ylim(c(0,100))+
   ylab("% Rotholz")+
-  xlab("BWA Population Size")+
-  theme(legend.position=c(.85,.83))+
-  ggtitle("Mallow Lake BWA Population- % Rotholz (2014-16)")
+  ggtitle("Mallow Lake BWA Population-Rotholz Summary")+
+  geom_label(mapping=NULL,data=NULL,stat="identity",position_dodge(width = 1), size = 3)
 
-fre_gsi<-read.csv("forest_service_data/FRE_inf_data.csv")
-
-#ggplot(fre_gsi, aes(x=tree_id, y=tree_gsi))+
-  #geom_line()
-  
 ###MVT
-MVT_rec<-read.csv("forest_service_data/MVT_rot_freq_by_pop_all_time.csv")
-#Old plot
-#ggplot(fre_rec, aes(x = bwa_pop, y = rot_tree, fill = bwa_pop ))+
-#  geom_bar(colour="black", stat="identity")+
-#  geom_bar(aes(p1))+
-#  ylim(0,70)
+mvt_rec_rot<-read.csv("data/forest_service_data/MVT_rot_freq_by_pop_full_record.csv")
+mvt_rec_rot$bwa_pop <- factor(mvt_rec_rot$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
 
-df<-melt(MVT_rec,id.vars = "bwa_pop")
-df$bwa_pop <- factor(df$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
-
-ggplot(df, aes(x = bwa_pop, y = value,fill=variable))+
-  geom_bar(stat='identity')+
-  scale_fill_manual(values=c("brown2", "steelblue4"),name="",label=c("% Rotholz", "# of Trees"))+
-  scale_y_continuous(limits = c(0, 100),sec.axis = sec_axis(~.*1, name = "Sample Depth"))+
+ggplot(mvt_rec_rot, aes(x=Year, y=rot_tree, fill=bwa_pop, label = num_tree))+
+  geom_bar(stat = 'identity', position = 'dodge')+
+  scale_fill_manual(values=c(bblue, bblue2, borange, bred),name="BWA Population", label=c("None","Light", "Moderate", "Heavy"))+
+  ylim(c(0,100))+
   ylab("% Rotholz")+
-  xlab("BWA Population Size")+
-  theme(legend.position=c(.85,.83))+
-  ggtitle("Middle Valley Trail BWA Population- % Rotholz (2014-16)")
-
-fre_gsi<-read.csv("forest_service_data/FRE_inf_data.csv")
-
-#ggplot(fre_gsi, aes(x=tree_id, y=tree_gsi))+
-  #geom_line()
+  ggtitle("Middle Valley Trail BWA Population-Rotholz Summary")+
+  geom_label(mapping=NULL,data=NULL,stat="identity",position_dodge(width = 1), size = 3)
 
 ###SEW
-SEW_rec<-read.csv("forest_service_data/SEW_rot_freq_by_pop_all_time.csv")
-#Old plot
-#ggplot(fre_rec, aes(x = bwa_pop, y = rot_tree, fill = bwa_pop ))+
-#  geom_bar(colour="black", stat="identity")+
-#  geom_bar(aes(p1))+
-#  ylim(0,70)
+sew_rec_rot<-read.csv("data/forest_service_data/SEW_rot_freq_by_pop_full_record.csv")
+sew_rec_rot$bwa_pop <- factor(sew_rec_rot$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
 
-df<-melt(SEW_rec,id.vars = "bwa_pop")
-df$bwa_pop <- factor(df$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
-
-ggplot(df, aes(x = bwa_pop, y = value,fill=variable))+
-  geom_bar(stat='identity')+
-  scale_fill_manual(values=c("brown2", "steelblue4"),name="",label=c("% Rotholz", "# of Trees"))+
-  scale_y_continuous(limits = c(0, 100),sec.axis = sec_axis(~.*1, name = "Sample Depth"))+
+ggplot(sew_rec_rot, aes(x=Year, y=rot_tree, fill=bwa_pop, label = num_tree))+
+  geom_bar(stat = 'identity', position = 'dodge')+
+  scale_fill_manual(values=c(bblue, bblue2, borange, bred),name="BWA Population", label=c("None","Light", "Moderate", "Heavy"))+
+  ylim(c(0,100))+
   ylab("% Rotholz")+
-  xlab("BWA Population Size")+
-  theme(legend.position=c(.85,.83))+
-  ggtitle("CV Sewer Plant BWA Population- % Rotholz (2014-16)")
-
-fre_gsi<-read.csv("forest_service_data/FRE_inf_data.csv")
-
-#ggplot(fre_gsi, aes(x=tree_id, y=tree_gsi))+
-  #geom_line()
+  ggtitle("CV Sewer Plant BWA Population-Rotholz Summary")+
+  geom_label(mapping=NULL,data=NULL,stat="identity",position_dodge(width = 1), size = 3)
 
 ###VFD
-VFD_rec<-read.csv("forest_service_data/VFD_rot_freq_by_pop_all_time.csv")
-#Old plot
-#ggplot(fre_rec, aes(x = bwa_pop, y = rot_tree, fill = bwa_pop ))+
-#  geom_bar(colour="black", stat="identity")+
-#  geom_bar(aes(p1))+
-#  ylim(0,70)
+vfd_rec_rot<-read.csv("data/forest_service_data/VFD_rot_freq_by_pop_full_record.csv")
+vfd_rec_rot$bwa_pop <- factor(vfd_rec_rot$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
 
-df<-melt(VFD_rec,id.vars = "bwa_pop")
-df$bwa_pop <- factor(df$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
-
-ggplot(df, aes(x = bwa_pop, y = value,fill=variable))+
-  geom_bar(stat='identity')+
-  scale_fill_manual(values=c("brown2", "steelblue4"),name="",label=c("% Rotholz", "# of Trees"))+
-  scale_y_continuous(limits = c(0, 100),sec.axis = sec_axis(~.*1, name = "Sample Depth"))+
+ggplot(vfd_rec_rot, aes(x=Year, y=rot_tree, fill=bwa_pop, label = num_tree))+
+  geom_bar(stat = 'identity', position = 'dodge')+
+  scale_fill_manual(values=c(bblue, bblue2, borange, bred),name="BWA Population", label=c("None","Light", "Moderate", "Heavy"))+
+  ylim(c(0,100))+
   ylab("% Rotholz")+
-  xlab("BWA Population Size")+
-  theme(legend.position=c(.85,.83))+
-  ggtitle("CV Volunteer Fire Dept BWA Population- % Rotholz (2014-16)")
-
-fre_gsi<-read.csv("forest_service_data/FRE_inf_data.csv")
-
-#ggplot(fre_gsi, aes(x=tree_id, y=tree_gsi))+
-  #geom_line()
-
-specie=c(rep("sorgho" , 3) , rep("poacee" , 3) , rep("banana" , 3) , rep("triticum" , 3) )
-condition=rep(c("normal" , "stress" , "Nitrogen") , 4)
-value=abs(rnorm(12 , 0 , 15))
-data=data.frame(specie,condition,value)
-
+  ggtitle("Volunteer Fire Dept. BWA Population-Rotholz Summary")+
+  geom_label(mapping=NULL,data=NULL,stat="identity",position_dodge(width = 1), size = 3)
