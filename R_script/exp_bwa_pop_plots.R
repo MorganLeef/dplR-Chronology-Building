@@ -43,11 +43,14 @@ axis(side = 4)
 mtext(side = 4, line = 3, 'Mean GSI')
 
 
-
-#ggplot
+###################################
+###ggplots
+##FRE fre_b<-
 ggplot(fre_rec_rot, aes(x = Year, y=mean_gsi, colour = bwa_pop))+
+  scale_fill_manual(values=c(bblue, bblue2, borange, bred),name="BWA Population", label=c("None","Light", "Moderate", "Heavy"))+
   geom_line()+
-  ylim(-1,2)
+  ylim(-1,2)+
+  
 
 ggplot(fre_rec_rot, aes(x=Year, y=rot_tree, fill=bwa_pop, label = num_tree))+
   geom_bar(stat = 'identity', position = 'dodge')+
@@ -55,9 +58,10 @@ ggplot(fre_rec_rot, aes(x=Year, y=rot_tree, fill=bwa_pop, label = num_tree))+
   ylim(c(0,100))+
   ylab("% Rotholz")+
   ggtitle("Freeland Road BWA Population-Rotholz Summary")+
-  geom_label(mapping=NULL,data=NULL,stat="identity",position_dodge(width = 1), size = 3)
+  geom_label(mapping=NULL,data=NULL,stat="identity",position_dodge(width = 1), size = 3,show.legend = FALSE)
 
-#geom_line(data = fre_rec_rot, aes(x = Year, y = mean_gsi))+
+ggarrange(fre_l, fre_b, ncol=1, nrow=2)
+
 ###MAL
 mal_rec_rot<-read.csv("data/forest_service_data/MAL_rot_freq_by_pop_full_record.csv")
 mal_rec_rot$bwa_pop <- factor(mal_rec_rot$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
