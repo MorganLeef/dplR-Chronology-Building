@@ -1,26 +1,34 @@
 ###Script to create plot of Canaan Valley - North/ Poca/Rand South regional 
-#climate summaries (correlation of tmax, tmin, tmax, ppt on regional .crn)
+#climate summaries (correlation of tmax, tmin, tmax, ppt, pdsi on regional .crn)
 #****REQUIRES ClimResp.Rmd + data****
-#Must change non-host coef.cal in ClimResp.Rmd to differentiate species
-#Must run each segment as you update dataframes from "ClimResp repository"
+#Must run each segment as you run all chunks of ClimResp.Rmd for each
+#climate variable to update dataframes from "ClimResp repository" as they
+#are overwritten
+#Climate variables must also be run in the order they appear in this script
 
 library(magrittr)
 library(ggpubr)
 library(reshape2)
 library(tidyverse)
 
+#Create colors for host (cred) and non-host (cblue)
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
 
+#Segment #1
 ###Canaan Valley tmean 0.10 cint -- Data frame reformatting
 df1<-data.frame(Month=coef.cal$month, Coef_h=coef.cal$coef, Coef_nh=coef.cal_nh$coef)
+#Melting to create long format for bar plots
 df1_melt<-melt(df1, id.vars = "Month")
+#Reorder the months to assure they plot in correct order
 df1_melt$Month <- factor(df1_melt$Month,levels = 
                           c("May", "Jun", "Jul", "Aug","Sep","Oct","Nov","Dec","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP"))
+#Create new dataframe containing the significance values 
 df1_sig<-data.frame(Month=coef.cal$month, sig_h=coef.cal$significant, sig_nh=coef.cal_nh$significant)
 df1_sig_melt<-melt(df1_sig, id.vars = "Month")
 
-
+#Plots the correlation for tmean for both species, with significant values
+#highlighted in black
 cv_tmean<-ggplot(df1_melt, aes(x = Month, y=value, fill=variable, colour=df1_sig_melt$value))+
   geom_bar(stat = 'identity', position = 'dodge')+
   scale_fill_manual(values=c(cred, cblue),name="",label=c("Host Coef", "Nonhost Coef"), guide=FALSE)+
@@ -30,6 +38,7 @@ cv_tmean<-ggplot(df1_melt, aes(x = Month, y=value, fill=variable, colour=df1_sig
   ggtitle("CV Region Mean Temp")
   
 
+#Segment #2
 ###Canaan Valley tmin
 df2<-data.frame(Month=coef.cal$month, Coef_h=coef.cal$coef, Coef_nh=coef.cal_nh$coef)
 df2_melt<-melt(df2, id.vars = "Month")
@@ -48,6 +57,7 @@ cv_tmin<-ggplot(df2_melt, aes(x = Month, y=value, fill=variable, colour=df2_sig_
   ggtitle("CV Region Min Temp")
 
 
+#Segment #3
 ###Canaan Valley tmax
 df3<-data.frame(Month=coef.cal$month, Coef_h=coef.cal$coef, Coef_nh=coef.cal_nh$coef)
 df3_melt<-melt(df3, id.vars = "Month")
@@ -65,6 +75,7 @@ cv_tmax<-ggplot(df3_melt, aes(x = Month, y=value, fill=variable, colour=df3_sig_
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   ggtitle("CV Region Max Temp")
 
+#Segment #4
 ###Canaan Valley ppt
 df4<-data.frame(Month=coef.cal$month, Coef_h=coef.cal$coef, Coef_nh=coef.cal_nh$coef)
 df4_melt<-melt(df4, id.vars = "Month")
@@ -83,8 +94,12 @@ cv_ppt<-ggplot(df4_melt, aes(x = Month, y=value, fill=variable, colour=df4_sig_m
   ggtitle("CV Region Mean Precipitation")
 
 
-###Final Plot
+###Final Plot 
 ggarrange(cv_tmean, cv_tmin, cv_tmax, cv_ppt, ncol=2, nrow=2)
+
+#png(p1.png)
+#p1<-ggarrange(cv_tmean, cv_tmin, cv_tmax, cv_ppt, ncol=2, nrow=2)
+#dev.off()
 
 ############################
 ###Poca-Rand 0.10 cint

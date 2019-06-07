@@ -46,22 +46,32 @@ mtext(side = 4, line = 3, 'Mean GSI')
 ###################################
 ###ggplots
 ##FRE fre_b<-
-ggplot(fre_rec_rot, aes(x = Year, y=mean_gsi, colour = bwa_pop))+
-  scale_fill_manual(values=c(bblue, bblue2, borange, bred),name="BWA Population", label=c("None","Light", "Moderate", "Heavy"))+
+fre_l<-ggplot(fre_rec_rot, aes(x = Year, y=mean_gsi, colour = bwa_pop))+
   geom_line()+
+  ggtitle("Freeland Road Mean GSI by BWA Pop Group")+
   ylim(-1,2)+
-  
+  ylab("Mean GSI")+
+  xlim(c(2014,2016))+
+  scale_x_continuous(breaks = c(2014,2014,2014,2015,2015,2015,2016,2016,2016),labels = c(2014,2014,2014,2015,2015,2015,2016,2016,2016))+
+  theme(legend.position="none")+
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+        
+        
 
-ggplot(fre_rec_rot, aes(x=Year, y=rot_tree, fill=bwa_pop, label = num_tree))+
+fre_b<-ggplot(fre_rec_rot, aes(x=Year, y=rot_tree, fill=bwa_pop, label = num_tree))+
   geom_bar(stat = 'identity', position = 'dodge')+
-  scale_fill_manual(values=c(bblue, bblue2, borange, bred),name="BWA Population", label=c("None","Light", "Moderate", "Heavy"))+
+  scale_fill_manual(values=c(bblue, bblue2, borange, bred),name="BWA Population", label=c("None","Light", "Moderate", "Heavy"), guide = FALSE)+
   ylim(c(0,100))+
   ylab("% Rotholz")+
   ggtitle("Freeland Road BWA Population-Rotholz Summary")+
   geom_label(mapping=NULL,data=NULL,stat="identity",position_dodge(width = 1), size = 3,show.legend = FALSE)
 
-ggarrange(fre_l, fre_b, ncol=1, nrow=2)
+#ggarrange(fre_l, fre_b, ncol=1, nrow=2)
 
+grid.newpage()
+grid.draw(rbind(ggplotGrob(fre_l), ggplotGrob(fre_b), size = "last"))
 ###MAL
 mal_rec_rot<-read.csv("data/forest_service_data/MAL_rot_freq_by_pop_full_record.csv")
 mal_rec_rot$bwa_pop <- factor(mal_rec_rot$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
