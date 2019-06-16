@@ -22,7 +22,7 @@ cv_abba.crn<- chron(cv_abba.rwi, prefix = "CVR")
 
 years_ABBA<-as.numeric(rownames(cv_abba.crn))
 
-sub_cv_abba<-subset(cv_abba.crn, years_ABBA > 1959 & years_ABBA < 1986)
+sub_cv_abba<-subset(cv_abba.crn, years_ABBA > 1956 & years_ABBA < 2017)
 
 cv_abba_crn.txt<-write.table(sub_cv_abba, file = "/Users/aleef/Desktop/cv_abba_crn.txt", row.names = T, col.names = T)
 
@@ -35,7 +35,7 @@ cv_pcru.crn<- chron(cv_pcru.rwi, prefix = "CVR")
 
 years_PCRU<-as.numeric(rownames(cv_pcru.crn))
 
-sub_cv_pcru<-subset(cv_pcru.crn, years_PCRU > 1959 & years_PCRU < 1986)
+sub_cv_pcru<-subset(cv_pcru.crn, years_PCRU > 1931 & years_PCRU < 2017)
 
 cv_pcru_crn.txt<-write.table(sub_cv_pcru, file = "/Users/aleef/Desktop/cv_pcru_crn.txt", row.names = T, col.names = T)
 
@@ -52,7 +52,7 @@ poca_abba.crn<- chron(poca_abba.rwi, prefix = "PRR")
 
 years_ABBA<-as.numeric(rownames(poca_abba.crn))
 
-sub_poca_abba<-subset(poca_abba.crn, years_ABBA > 1959 & years_ABBA < 1986)
+sub_poca_abba<-subset(poca_abba.crn, years_ABBA > 1956 & years_ABBA < 2017)
 
 poca_abba_crn.txt<-write.table(sub_poca_abba, file = "/Users/aleef/Desktop/poca_abba_crn.txt", row.names = T, col.names = T)
 
@@ -67,9 +67,9 @@ poca_pcru.crn<- chron(poca_pcru.rwi, prefix = "PRR")
 
 years_PCRU<-as.numeric(rownames(poca_pcru.crn))
 
-sub_poca_pcru<-subset(poca_pcru.crn, years_PCRU > 1959 & years_PCRU < 1986)
+sub_poca_pcru<-subset(poca_pcru.crn, years_PCRU > 1949 & years_PCRU < 2017)
 
-poca_pcru_crn.txt<-write.table(sub_poca_abba, file = "/Users/aleef/Desktop/poca_pcru_crn.txt", row.names = T, col.names = T)
+poca_pcru_crn.txt<-write.table(sub_poca_pcru, file = "/Users/aleef/Desktop/poca_pcru_crn.txt", row.names = T, col.names = T)
 
 ###crn.plot(sub_poca_pcru)
 
