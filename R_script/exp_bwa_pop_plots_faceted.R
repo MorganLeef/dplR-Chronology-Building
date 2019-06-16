@@ -15,7 +15,7 @@ borange = rgb(175,100,100, max=255)
 bred  = rgb(255,100,100, max=255)
 
 
-fre_rec_rot<-read.csv("data/forest_service_data/FRE_rot_num.csv")
+fre_rec_rot<-read.csv("Data/forest_service_data/FRE_rot_num.csv")
 fre_rec_rot$bwa_pop <- factor(fre_rec_rot$bwa_pop,levels = c("None", "Light", "Moderate", "Heavy"))
 fre<-data.frame(bwa_pop=fre_rec_rot$bwa_pop, num_tree=fre_rec_rot$num_tree, rot_num=fre_rec_rot$rot_num)
 fre_melt<-melt(fre,id.vars = "bwa_pop")
