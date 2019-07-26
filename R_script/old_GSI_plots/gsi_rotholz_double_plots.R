@@ -11,6 +11,13 @@ library(tidyverse)
 library(dfoliatR)
 library(suRge)
 
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
+
 temp = list.files(pattern="*.rwl")
 for (i in 1:length(temp)) assign(temp[i], read.rwl(temp[i]))
 
@@ -37,20 +44,33 @@ sub_abba$samp.depth<-NULL
 sub_pcru$samp.depth<-NULL
 
 ###New method of calculating corrected chronologies using dfoliatR/suRge
+
+###Series 25A registered no infestation. Removing for gannt plot
+#sub_abba$BDR01CCB<-NULL
+sub_abba$BDR04BBB<-NULL
+sub_abba$BDR06AAB<-NULL
+#sub_abba$BDR07A<-NULL
+#sub_abba$BDR08A<-NULL
+#sub_abba$BDR08B<-NULL
+#sub_abba$BDR09A<-NULL
+#sub_abba$BDR10A<-NULL
+#sub_abba$BDR12A<-NULL
+#sub_abba$BDR13A<-NULL
+#sub_abba$BDR14B<-NULL
 ##Function subtracts values from non-host .crn from values in host index
-ef_defol <- defoliate_trees(host_tree = sub_abba, nonhost_chron = sub_pcru, duration_years = 8, list_output = FALSE)
+ef_defol <- defoliate_trees(host_tree = sub_abba, nonhost_chron = sub_pcru, duration_years = 6, list_output = FALSE)
 
 ###Standard plotting of defoliate trees function (high gsi in red)
 ###plot_defol(ef_defol, col_defol = "red")
 
 ###Plots varying intensity infestation events for each series over time
-###gantt_plot(ef_defol)
+#gantt_plot(ef_defol)
 
 ###
 ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 
 ###
-###plot_outbreak(ef_comp)
+plot_outbreak(ef_comp)
 
 
 
@@ -73,7 +93,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Beaver Dam Run Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 BDR_rot<-read.csv("rotholz_data/BDR.csv")
@@ -81,9 +101,9 @@ BDR_rot<-read.csv("rotholz_data/BDR.csv")
 df<-melt(BDR_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -124,14 +144,18 @@ sub_year_pcru<-as.numeric(rownames(sub_pcru))
 sub_abba$samp.depth<-NULL
 sub_pcru$samp.depth<-NULL
 
+###Series 25A registered no infestation. Removing for gannt plot
+sub_abba$BFT25AAB<-NULL
+
 ###
-ef_defol <- defoliate_trees(host_tree = sub_abba, nonhost_chron = sub_pcru, duration_years = 8, list_output = FALSE)
+ef_defol <- defoliate_trees(host_tree = sub_abba, nonhost_chron = sub_pcru, duration_years = 4, list_output = FALSE)
 
 ###
 ###plot_defol(ef_defol, col_defol = "red")
 
 ###
-###gantt_plot(ef_defol)
+
+gantt_plot(ef_defol)
 
 ###
 ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
@@ -144,6 +168,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -160,7 +190,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Balsam Fir Trail Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 BFT_rot<-read.csv("rotholz_data/BFT.csv")
@@ -168,9 +198,9 @@ BFT_rot<-read.csv("rotholz_data/BFT.csv")
 df<-melt(BFT_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -191,7 +221,7 @@ for (i in 1:length(temp)) assign(temp[i], read.rwl(temp[i]))
 
 #Detrend and create a chronology for BRS ABBA
 BRS_ABBA.rwi <- detrend(rwl = BRS_ABBA.rwl, method = "ModNegExp")
-###BRS_ABBA.crn<- chron(BRS_ABBA.rwi, prefix = "BRS")
+BRS_ABBA.crn<- chron(BRS_ABBA.rwi, prefix = "BRS")
 
 #Detrend and create a chonology for BRS PCRU
 BRS_PCRU.rwi <- detrend(rwl = BRS_PCRU.rwl, method = "ModNegExp")
@@ -211,14 +241,18 @@ sub_year_pcru<-as.numeric(rownames(sub_pcru))
 sub_abba$samp.depth<-NULL
 sub_pcru$samp.depth<-NULL
 
+###2B and 4A removed for gannt plot (no outbreaks)
+sub_abba$BRS02BBB<-NULL
+sub_abba$BRS04AAB<-NULL
 ###
-ef_defol <- defoliate_trees(host_tree = sub_abba, nonhost_chron = sub_pcru, duration_years = 8, list_output = FALSE)
+ef_defol <- defoliate_trees(host_tree = sub_abba, nonhost_chron = sub_pcru, duration_years = 4, list_output = FALSE)
 
 ###
 ###plot_defol(ef_defol, col_defol = "red")
 
+
 ###
-###gantt_plot(ef_defol)
+gantt_plot(ef_defol)
 
 ###
 ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
@@ -231,6 +265,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -247,7 +287,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Blister Run Swamp Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 BRS_rot<-read.csv("rotholz_data/BRS.csv")
@@ -255,9 +295,9 @@ BRS_rot<-read.csv("rotholz_data/BRS.csv")
 df<-melt(BRS_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -318,6 +358,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -334,7 +380,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Courtland Road Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 COR_rot<-read.csv("rotholz_data/COR.csv")
@@ -342,9 +388,9 @@ COR_rot<-read.csv("rotholz_data/COR.csv")
 df<-melt(COR_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -405,6 +451,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -421,7 +473,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Dolly Sods Wilderness Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 DOL_rot<-read.csv("rotholz_data/DOL.csv")
@@ -429,9 +481,9 @@ DOL_rot<-read.csv("rotholz_data/DOL.csv")
 df<-melt(DOL_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -492,6 +544,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -508,7 +566,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Deer Run Trail Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 DRT_rot<-read.csv("rotholz_data/DRT.csv")
@@ -516,9 +574,9 @@ DRT_rot<-read.csv("rotholz_data/DRT.csv")
 df<-melt(DRT_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -579,6 +637,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -595,7 +659,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Freeland Road Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 FRE_rot<-read.csv("rotholz_data/FRE.csv")
@@ -603,9 +667,9 @@ FRE_rot<-read.csv("rotholz_data/FRE.csv")
 df<-melt(FRE_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -666,6 +730,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -682,7 +752,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Mallow Lake Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 MAL_rot<-read.csv("rotholz_data/MAL.csv")
@@ -690,9 +760,9 @@ MAL_rot<-read.csv("rotholz_data/MAL.csv")
 df<-melt(MAL_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -753,6 +823,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -769,7 +845,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Marlington/Scenic Highway Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 MSH_rot<-read.csv("rotholz_data/MSH.csv")
@@ -777,9 +853,9 @@ MSH_rot<-read.csv("rotholz_data/MSH.csv")
 df<-melt(MSH_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -840,6 +916,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -856,7 +938,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Middle Valley Trail Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 MVT_rot<-read.csv("rotholz_data/MVT.csv")
@@ -864,9 +946,9 @@ MVT_rot<-read.csv("rotholz_data/MVT.csv")
 df<-melt(MVT_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -927,6 +1009,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -943,7 +1031,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Route 32/Manor Road Int. Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 RMR_rot<-read.csv("rotholz_data/RMR.csv")
@@ -951,9 +1039,9 @@ RMR_rot<-read.csv("rotholz_data/RMR.csv")
 df<-melt(RMR_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -1016,6 +1104,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -1032,7 +1126,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("CV Sewer Plant Corrected Chronology")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 SEW_rot<-read.csv("rotholz_data/SEW.csv")
@@ -1040,9 +1134,9 @@ SEW_rot<-read.csv("rotholz_data/SEW.csv")
 df<-melt(SEW_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -1105,6 +1199,12 @@ ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -1121,7 +1221,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Upper Tract Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3, borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 UPT_rot<-read.csv("rotholz_data/UPT.csv")
@@ -1129,9 +1229,9 @@ UPT_rot<-read.csv("rotholz_data/UPT.csv")
 df<-melt(UPT_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
@@ -1179,19 +1279,26 @@ ef_defol <- defoliate_trees(host_tree = sub_abba, nonhost_chron = sub_pcru, dura
 ###plot_defol(ef_defol, col_defol = "red")
 
 ###
-###gantt_plot(ef_defol)
 
+#gantt_plot(ef_defol, breaks = c(1.5,2.5))
+#gantt_plot(ef_defol, breaks = c[3,2,1])
 ###
 ef_comp <- outbreak(ef_defol, filter_perc = 25,filter_min_series = 3)
 
 ###
-###plot_outbreak(ef_comp)
+plot_outbreak(ef_comp)
 
 
 
 ###Advanced ggplots
 cblue = rgb(125,200,200, max=255)
 cred  = rgb(200,125,125, max=255)
+bblue3 = rgb(100,150,255, max=255)
+borange2 = rgb(255,150,100, max=255)
+bblue = rgb(100,175,200, max=255)
+bblue2 = rgb(100,175,150, max=255)
+borange = rgb(175,100,100, max=255)
+bred  = rgb(255,100,100, max=255)
 t_shift <- scales::trans_new("shift",transform = function(x) {x-1},inverse = function(x) {x+1})
 
 Year<-sub_year_abba
@@ -1208,7 +1315,7 @@ p1<-ggplot(data=dfi, aes(x=Year, y=RWI))+
   geom_hline(yintercept = 1)+
   scale_y_continuous(trans=t_shift)+
   ggtitle("Volunteer Fire Dept. Growth Suppression Index")+
-  scale_fill_manual(values=c(cblue, cred),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
+  scale_fill_manual(values=c(bblue3,borange2),name="C RWI", label=c("Above Mean","Below Mean"), guide = FALSE)+
   theme(legend.position=c(.05,.1))
 
 VFD_rot<-read.csv("rotholz_data/VFD.csv")
@@ -1216,13 +1323,14 @@ VFD_rot<-read.csv("rotholz_data/VFD.csv")
 df<-melt(VFD_rot,id.vars = "Year")
 
 p2<-ggplot(df, aes(x = Year, y = value,fill=variable))+
-  geom_bar(stat='identity')+
+  geom_bar(stat='identity', position = 'identity')+
   theme(legend.position=c(.05,.1))+
-  scale_fill_manual(values=c("brown2", "steelblue4"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
+  scale_fill_manual(values=c("gray70", "gray50"), name="Sample Damage", label=c("% Rotholz", "% Resin"), guide = FALSE)+
   scale_y_continuous(limits = c(0, 65))+
   ylab("% of Live Samples")
 
+
 ggarrange(p1, p2, ncol=1, nrow=2, widths=c(1980,2016))
 
-
+BDRrwl.stats(BDR_ABBA.rwl)
 

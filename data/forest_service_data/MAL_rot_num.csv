@@ -1,0 +1,9 @@
+bwa_pop,Year,rot_num,num_tree,mean_gsi,mean_ngsi
+None,2014,1,6,0.7908375,-0.52257
+Light,2014,2,16,0.488963333,-0.81318
+Moderate,2014,0,0,NA,NA
+Heavy,2014,0,0,NA,NA
+None,2016,1,13,0.217104167,-1.576216667
+Light,2016,0,9,0.071178571,-1.645857143
+Moderate,2016,0,0,NA,NA
+Heavy,2016,0,0,NA,NA
